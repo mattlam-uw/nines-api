@@ -1,0 +1,5 @@
+This is a dummy file placed here for the purpose of adding the 'logs' directory to the nines-server repository.
+
+Once you have cloned the nines-server repository, you can safely delete this file.
+
+Leaving the file should also not cause any problems.
