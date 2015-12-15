@@ -1,6 +1,0 @@
-[
-    { "name": "Research home page", "host": "www.washington.edu", "path": "/research/" },
-    { "name": "Limited Submissions page", "host": "www.washington.edu", "path": "/research/funding/limited-submissions/" },
-    { "name": "Funding Opportunities page", "host": "www.washington.edu", "path": "/research/funding/bopportunities/" },
-    { "name": "Stats and Rankings page", "host": "www.washington.edu", "path": "/research/spotlight/ranking/" }
-]
