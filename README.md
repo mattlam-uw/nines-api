@@ -9,58 +9,45 @@ Httpinger makes the actual HTTP requests and logs the results. This component pr
 
 1. Install Nines Server
     1. Clone nines-server
-    ```
-    $ git clone git@github.com:mattlam-uw/nines-server.git
-    ```
+        ```
+        $ git clone git@github.com:mattlam-uw/nines-server.git
+        ```
     2. Install node modules for Nines Server
-    ```
-    $ cd nines-server
-    $ npm install
-    ```
+        ```
+        $ cd nines-server
+        $ npm install
+        ```
 2. Install Httpinger
     1. Clone httpinger
-    
-    ```
-    $ git clone git@github.com:mattlam-uw/httpinger.git
-    ```
-    
+        ```
+        $ git clone git@github.com:mattlam-uw/httpinger.git
+        ```
     2. Install node modules for Httpinger
-    
-    ```
-    $ cd httpinger
-    $ npm install
-    ```
-    
+        ```
+        $ cd httpinger
+        $ npm install
+        ```
 3. Remove the dummy file in the Httpinger logs/ directory
-
     ```
     $ cd logs
     $ rm dummy.txt
     ```
-    
 4. Test Httpinger
-
     ```
     $ cd ..
     $ node httpinger.js
     ```
-    
     The program should run for a couple of seconds, then:
-    
     ```
     $ cd logs
     $ ls -la
     ```
-    
     And you should see at least one file: header_request_log.txt. But there may also be one or more files that start wit    h ‘err-‘.
-    
 5. Test Nines Server
-
     ```
     $ cd ../..
     $ node ./bin/www
     ```
-    
     1. Open a browser and navigate to: http://localhost:3000/urls
     2. You should see either an empty object {}, or an array of objects [{…},{…},{…}]
     3. Now test http://localhost:3000/errors and you should get similar results.
