@@ -7,7 +7,7 @@ var path = require('path');
 var Urls = require('../models/Urls.js');
 
 // Define constants. These may later be placed in a config file.
-const URLS_FILE_PATH = path.join(__dirname, '..', 'httpinger', 'data', 'urls.json');
+const URLS_FILE_PATH = path.join(__dirname, '..', 'nines-pinger', 'data', 'urls.json');
 
 /* GET (retrieve all urls data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
