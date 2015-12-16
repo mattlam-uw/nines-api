@@ -5,10 +5,13 @@ At this time, this should be installed on the same machine that hosts the Httpin
 
 Httpinger makes the actual HTTP requests and logs the results. This component provides a RESTful API view of the results.
 
+# Dependencies
+Node.js version 0.10.29 or newer
+
 # Installation
 
 1. Install Nines Server
-    1. Clone nines-server
+    1. Navigate to the directory you wish to install to and clone nines-server
         
         ```
         $ git clone git@github.com:mattlam-uw/nines-server.git
