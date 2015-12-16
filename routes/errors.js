@@ -7,7 +7,7 @@ var path = require('path');
 var Errors = require('../models/Errors.js');
 
 // Define constants. These may later be placed in a config file.
-const LOG_FILE_DIR = path.join(__dirname, '..', 'httpinger', 'logs');
+const LOG_FILE_DIR = path.join(__dirname, '..', 'nines-pinger', 'logs');
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
