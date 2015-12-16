@@ -9,18 +9,14 @@ Httpinger makes the actual HTTP requests and logs the results. This component pr
 
 1. Install Nines Server
     1. Clone nines-server
-	
     ```
     $ git clone git@github.com:mattlam-uw/nines-server.git
     ```
-		
     2. Install node modules for Nines Server
-
     ```
     $ cd nines-server
     $ npm install
     ```
-
 2. Install Httpinger
     1. Clone httpinger
     
