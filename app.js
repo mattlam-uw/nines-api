@@ -22,6 +22,13 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Allows reading resource located at same origin as client
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requrested-With, Content-Type, Accept");
+    next();
+});
+
 app.use('/errors', errors);
 app.use('/urls', urls);
 
