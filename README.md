@@ -1,55 +1,55 @@
 # Description
-This is the server component of the Nines application. It provides a RESTful web API for viewing request response information and errors
+This is the API server component of the Nines application. It provides a RESTful web API for viewing request response information and errors.
 
-At this time, this should be installed on the same machine that hosts the Httpinger component.
+At this time, this should be installed on the same machine that hosts the Nines Pinger component.
 
-Httpinger makes the actual HTTP requests and logs the results. This component provides a RESTful API view of the results.
+Nines Pinger makes the actual HTTP requests and logs the results. This component provides a RESTful API view of the results.
 
 # Dependencies
 Node.js version 0.10.29 or newer
 
 # Installation
 
-1. Install Nines Server
-    1. Navigate to the directory you wish to install to and clone nines-server
+1. Install Nines API
+    1. Navigate to the directory you wish to install to and clone nines-api
         
         ```
-        $ git clone git@github.com:mattlam-uw/nines-server.git
+        $ git clone git@github.com:mattlam-uw/nines-api.git
         ```
         
-    2. Install node modules for Nines Server
+    2. Install node modules for Nines API
         
         ```
-        $ cd nines-server
+        $ cd nines-api
         $ npm install
         ```
         
-2. Install Httpinger
-    1. Clone httpinger
+2. Install Nines Pinger
+    1. Clone Nines Pinger
         
         ```
-        $ git clone git@github.com:mattlam-uw/httpinger.git
+        $ git clone git@github.com:mattlam-uw/nines-pinger.git
         ```
         
-    2. Install node modules for Httpinger
+    2. Install node modules for Nines Pinger
         
         ```
-        $ cd httpinger
+        $ cd nines-pinger
         $ npm install
         ```
         
-3. Remove the dummy file in the Httpinger logs/ directory
+3. Remove the dummy file in the /nines-pinger/logs/ directory
     
     ```
     $ cd logs
     $ rm dummy.txt
     ```
     
-4. Test Httpinger
+4. Test Nines Pinger
     
     ```
     $ cd ..
-    $ node httpinger.js
+    $ node nines-pinger.js
     ```
     
     The program should run for a couple of seconds, then:
@@ -60,7 +60,7 @@ Node.js version 0.10.29 or newer
     ```
     
     And you should see at least one file: ```header_request_log.txt```. But there may also be one or more files that start with ```err-```.
-5. Test Nines Server
+5. Test Nines API
     
     ```
     $ cd ../..
