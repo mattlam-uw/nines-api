@@ -59,13 +59,14 @@ Node.js version 0.10.29 or newer
     $ ls -la
     ```
     
-    And you should see at least one file: header_request_log.txt. But there may also be one or more files that start with ‘err-‘.
+    And you should see at least one file: ```header_request_log.txt```. But there may also be one or more files that start with ```err-```.
 5. Test Nines Server
     
     ```
     $ cd ../..
     $ node ./bin/www
     ```
+    This should start the server. Now you can:
     
     1. Open a browser and navigate to: ```http://localhost:3000/urls```
     2. You should see either an empty object ```{}```, or an array of objects ```[{…},{…},{…}]```
