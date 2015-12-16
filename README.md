@@ -56,7 +56,7 @@ Httpinger makes the actual HTTP requests and logs the results. This component pr
     $ ls -la
     ```
     
-    And you should see at least one file: header_request_log.txt. But there may also be one or more files that start wit    h ‘err-‘.
+    And you should see at least one file: header_request_log.txt. But there may also be one or more files that start with ‘err-‘.
 5. Test Nines Server
     
     ```
