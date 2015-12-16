@@ -1,12 +1,13 @@
 // Node.js Module Dependencies
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 
 // Model Dependency
 var Errors = require('../models/Errors.js');
 
 // Define constants. These may later be placed in a config file.
-const LOG_FILE_DIR = './logs/';     // Path to log files
+const LOG_FILE_DIR = path.join(__dirname, '..', 'httpinger', 'logs');
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide

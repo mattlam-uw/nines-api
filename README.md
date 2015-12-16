@@ -11,3 +11,4 @@ Httpinger makes the actual HTTP requests and logs the results. This component pr
 | ID  | Story |
 | --- | ----- |
 | 1 | As a developer charged with installing and maintaining this application, I want to be able to use a system config file for setting the path used to locate the urls.json file. |
+| 2 | As a developer charged with installing and maintaining this application, I want to be able to use a system config file for setting the log file directory path. |
