@@ -64,9 +64,9 @@ Httpinger makes the actual HTTP requests and logs the results. This component pr
     $ node ./bin/www
     ```
     
-    1. Open a browser and navigate to: http://localhost:3000/urls
-    2. You should see either an empty object {}, or an array of objects [{…},{…},{…}]
-    3. Now test http://localhost:3000/errors and you should get similar results.
+    1. Open a browser and navigate to: ```http://localhost:3000/urls```
+    2. You should see either an empty object ```{}```, or an array of objects ```[{…},{…},{…}]```
+    3. Now test ```http://localhost:3000/errors``` and you should get similar results.
 	
 # Story Backlog
 | ID  | Story |
