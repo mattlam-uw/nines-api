@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var errors = require('./routes/errors');
 var urls = require('./routes/urls');
+var config = require('./modules/config');
 
 var app = express();
 
@@ -24,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Allows reading resource located at same origin as client
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", config.ninesWebHost);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requrested-With, Content-Type, Accept");
     next();
 });

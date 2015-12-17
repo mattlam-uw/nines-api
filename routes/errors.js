@@ -3,25 +3,23 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
-// Model Dependency
+// Dependencies
 var Errors = require('../models/Errors.js');
-
-// Define constants. These may later be placed in a config file.
-const LOG_FILE_DIR = path.join(__dirname, '..', 'nines-pinger', 'logs');
+var config = require('../modules/config');
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
 //       separate GET requests for status codes, associated counts, and
 //       associated file names. But for now, just returning the whole object
 router.get('/', function(req, res, next) {
-    Errors.getReqErrStats(LOG_FILE_DIR, function(errors) {
+    Errors.getReqErrStats(config.logFileDir, function(errors) {
         res.json(errors);
     });
 });
 
 /* GET status codes */
 router.get('/codes', function(req, res, next) {
-    Errors.getReqErrStats(LOG_FILE_DIR, function(errors) {
+    Errors.getReqErrStats(config.logFileDir, function(errors) {
         var statusCodes = [];
         // iterate over errors object and add codes to array
         for (var code in errors) {
@@ -33,7 +31,7 @@ router.get('/codes', function(req, res, next) {
 
 /* GET count for given status code */
 router.get('/:id/count', function(req, res, next) {
-    Errors.getReqErrStats(LOG_FILE_DIR, function(errors) {
+    Errors.getReqErrStats(config.logFileDir, function(errors) {
         var result = [];
         result.push(errors[req.params.id].count);
         res.json(result);
@@ -42,7 +40,7 @@ router.get('/:id/count', function(req, res, next) {
 
 /* GET file names for given status code */
 router.get('/:id/files', function(req, res, next) {
-    Errors.getReqErrStats(LOG_FILE_DIR, function(errors) {
+    Errors.getReqErrStats(config.logFileDir, function(errors) {
         res.json(errors[req.params.id].files);
     });
 });
