@@ -1,6 +1,13 @@
 /**
- * Created by mattlam on 12/16/15.
- */
+ * When setting up Nines API, all application configuration should be done in
+ * the config.js file in the root directory of the application.
+ *
+ * This module takes the config.js data and packages it for use by the Nines
+ * API application code
+ *
+ * You should not need to change anything in this file when configuring NINES API
+ **/
+    
 // Dependencies
 var path = require('path');
 var config = require('../config.js');
