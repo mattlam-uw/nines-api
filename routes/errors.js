@@ -3,8 +3,9 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
-// Dependencies
+// Model dependency
 var Errors = require('../models/Errors.js');
+// Config data dependency
 var config = require('../modules/config-convey');
 
 /* GET (retrieve all error data -- provided in one object) */
