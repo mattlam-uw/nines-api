@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var debug = require('debug')('httpingApp');
 var app = require('../app');
-var config = require('../modules/config');
+var config = require('../modules/config-convey');
 
 app.set('port', process.env.PORT || config.ninesApiPort);
 

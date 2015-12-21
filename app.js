@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var errors = require('./routes/errors');
 var urls = require('./routes/urls');
-var config = require('./modules/config');
+var config = require('./modules/config-convey');
 
 var app = express();
 

@@ -5,7 +5,7 @@ var path = require('path');
 
 // Dependencies
 var Errors = require('../models/Errors.js');
-var config = require('../modules/config');
+var config = require('../modules/config-convey');
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
