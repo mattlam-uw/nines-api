@@ -53,4 +53,10 @@ exports.getReqErrStats = function(dirPath, callback) {
     });
 }
 
+// Function retrieves the contents of a specific error log file and returns
+// to the client for rendering as HTML page
+exports.getReqErrPage = function() {
+    
+}
+
 
