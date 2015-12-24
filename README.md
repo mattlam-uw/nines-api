@@ -77,3 +77,4 @@ Node.js version 0.10.29 or newer
 | --- | ----- |
 | 1 | As a developer charged with installing and maintaining this application, I want to be able to use a system config file for setting the path used to locate the urls.json file. |
 | 2 | As a developer charged with installing and maintaining this application, I want to be able to use a system config file for setting the log file directory path. |
+| 3 | Third story. |
