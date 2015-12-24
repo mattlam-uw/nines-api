@@ -1,5 +1,5 @@
 /**
- * Errors Model
+ * Errors Log Model
  *
  * This model provides data around HTTP requests that have generated an error
  * (status code >= 400). It does this by building a JavaScript object from
