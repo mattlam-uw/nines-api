@@ -12,19 +12,14 @@
 
 // Node.js Module Dependencies
 var http = require('http'); // Used to make HTTP requests
-var fs = require('fs');     // Used for reading and writing to local system files
 var path = require('path'); // Used for creating urls to file resources
 var mongoose = require('mongoose'); // Used for interaction with MongoDB-based model
 
 // Define constants. These may later be placed in a config file.
 const ROOT_DIR = path.join(__dirname, '..');
 
-const LOG_FILE_PATH = '/logs';     // Path to log files
-const REQ_LOG_FILE_NAME = '/header_request_log.txt'; // File name for standard log file
-
 // Require local modules
-var logIO = require(ROOT_DIR + '/modules/logIO.js');
-var logIOMongo = require(ROOT_DIR + '/modules/logIOMongo.js');
+var logIO = require(ROOT_DIR + '/modules/logIOMongo.js');
 
 // Function to run through and ping all defined urls
 exports.pingUrls = function(arrUrls) {
@@ -82,8 +77,6 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
 
         // Output the response body (web page code)
         var pageData = '';
-        var noSpaceName = removeNonAlpha(urlName);
-        var reqLogFilePath = ROOT_DIR + LOG_FILE_PATH;
 
         // The way streaming works in node.js, you must listen for and consume 
         // the response data in order for the response 'end' event to be fired. 
@@ -110,10 +103,6 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
 
-                // Write the log entry to the general log file
-                //logIO.writeReqLogEntry(reqLogFilePath, REQ_LOG_FILE_NAME,
-                //    readableTime, urlName, urlHost, urlPath, res.statusCode);
-
                 // Add log of this request to the General Log
                 var eventType = urlProtocol + ' request';
                 var eventDescription = 'name: ' + urlName + '\n'
@@ -121,7 +110,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                                      + 'path: ' + urlPath + '\n'
                                      + 'response code: ' + res.statusCode;
 
-                logIOMongo.writeGeneralLogEntry(reqDateTime, eventType, eventDescription);
+                logIO.writeGeneralLogEntry(reqDateTime, eventType, eventDescription);
 
                 // Check to see if this is the last of the request batch. If it
                 // is, then close the MongoDB connection following a 10 second
@@ -149,15 +138,8 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                 var fullUrl = urlProtocol + "://" +  urlHost + urlPath;
 
                 // Log the error response to MongoDB
-                logIOMongo.writeErrLogEntry(res.statusCode, urlName, fullUrl, reqTime, pageData);
+                logIO.writeErrLogEntry(res.statusCode, urlName, fullUrl, reqTime, pageData);
             }
         });
     };
-}
-
-// Function for replacing non-alphanumeric characters, including any white
-// space characters with underscores. This makes the returned string
-// suitable for file names.
-function removeNonAlpha(text) {
-    return text.replace(/\W+/g, "_");
 }
