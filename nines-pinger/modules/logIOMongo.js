@@ -9,8 +9,8 @@ var express = require('express');
 var router = express.Router();
 // -- ErrorsMongo mongoose model
 var mongoose = require('mongoose');
-var Errors = require('../../models/Errors');
-var Events = require('../../models/Events');
+var Errors = require('../../models/Errors_Mongo');
+var Events = require('../../models/Events_Mongo');
 
 /**
  * Errors model methods
