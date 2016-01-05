@@ -1,5 +1,0 @@
-{
-    "name": "nines-pinger",
-    "version": "0.0.1",
-    "description": "Sends HTTP requests to specified URL targets and logs results"
-}
