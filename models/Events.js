@@ -1,7 +1,7 @@
 /**
- * General Log Model
+ * General Event Log Model
  *
- * This model provides general logging data for Nines Pinger, which can
+ * This model provides general event logging data for Nines Pinger, which can
  * include:
  *   + A log of all URLs pinged
  *   + Non-fatal errors encountered, such as a bad protocol (not http or https)
@@ -17,5 +17,6 @@ var GeneralSchema = new mongoose.Schema({
     event_description: String
 });
 
-// Export mongoose 'General' model
-module.exports = mongoose.model('General', GeneralSchema);
+// Export mongoose 'Event' model, which will create/use a collection called
+// 'events' in MongoDB
+module.exports = mongoose.model('Event', GeneralSchema);

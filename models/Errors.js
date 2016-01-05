@@ -1,62 +1,25 @@
 /**
- * Errors Model
+ * Errors Log Model
  *
- * This model provides data around requests that have generated an error. This
- * data is stored in a JavaScript object that is built by scanning and
- * parsing the error log files in the /logs directory. This is a read-only
- * model as the writing is accomplished by adding or removing log files.
- *
- * In the future, this may be replaced with a database-based model.
- */
+ * This model provides data around HTTP requests that have generated an error
+ * (status code >= 400). It does this by building a JavaScript object from
+ * documents (data) retrieved from the Errors MongoDB collection. For the
+ * purposes of Nines API, this is a read-only model. Nines Pinger writes
+ * HTTP request result data to the MongoDB Errors collection.
+ **/
 
-// Node.js Module Dependencies
-var fs = require('fs'); // Used for reading and writing to local system files
+// Dependencies
+var mongoose = require('mongoose');
 
+// Define Mongoose Schema
+var ErrorsSchema = new mongoose.Schema({
+    user_id: String,
+    status_code: Number,
+    resource_name: String,
+    resource_url: String,
+    response: String,
+    request_datetime: Date
+});
 
-// Function reads the logs directory to retrieve file names. The file names are
-// then parsed to create an error object, which contains a property for each
-// error status code. Each of these properties in turn has properties 
-// representing the incidence count for the status code and an array of error
-// file names for the status code. The callback is used to provide this data
-// back to the client.
-exports.getReqErrStats = function(dirPath, callback) {
-    // Object to store request error stats
-    var errors = {};
-
-    fs.readdir(dirPath, function(err, fileNames) {
-        if (err) return console.log(err);
-
-        // Iterate over the files returned from fs.readdir looking for files 
-        // that begin with 'err', then parse the status code out of the file 
-        // name and add the file to the stats
-        for (var i = 0; i < fileNames.length; i++) {
-            if (fileNames[i].substr(0, 3) == 'err') {
-                // Parse the status code
-                var statusCode = fileNames[i].substr(4, 3);
-                // If a subobject for the status code exists, then add stats 
-                // to it
-                if (errors[statusCode]) {
-                    errors[statusCode].count++;
-                    errors[statusCode].files.push(fileNames[i]);
-                    // Otherwise, create a subobject for the status code and 
-                    // add stats
-                } else {
-                    errors[statusCode] = {};
-                    errors[statusCode].count = 1;
-                    errors[statusCode].files = [fileNames[i]];
-                }
-            }
-        }
-
-        // Now the client callback can do something with the errors object
-        callback(errors);
-    });
-}
-
-// Function retrieves the contents of a specific error log file and returns
-// to the client for rendering as HTML page
-exports.getReqErrPage = function() {
-    
-}
-
-
+// Export mongoose 'Errors' model
+module.exports = mongoose.model('Errors', ErrorsSchema);
