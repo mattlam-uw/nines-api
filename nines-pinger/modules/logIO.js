@@ -1,45 +1,74 @@
 /**
- * This module contains all methods required for log file CRUD operations.
+ * IO Interface for MongoDB collection defined and supported by Mongoose Schema
+ * outlined in ErrorsMongo.js model
+ **/
+
+// Dependencies:
+// -- Express Router
+var express = require('express');
+var router = express.Router();
+// -- ErrorsMongo mongoose model
+var mongoose = require('mongoose');
+var Errors = require('../../models/Errors_Mongo');
+var Events = require('../../models/Events_Mongo');
+
+/**
+ * Errors model methods
  */
 
-// Node.js Module Dependencies
-var fs = require('fs'); // Used for reading and writing to local system files
+/* GET (retrieve all) errors */
+router.get('/', function(req, res, next) {
+    Errors.find(function(err, returnVal) {
+        if (err) return next(err);
+        res.json(returnVal);
+    });
+});
 
+/* GET (retrieve all) errors by user_id */
 
-// Write new general log file entry to log file
-exports.writeReqLogEntry = function(filePath, fileName, readableTime, urlName,
-                                    urlHost, urlPath, statusCode) {
+/* POST (create new) error */
+router.post('/', function(req, res, next) {
+    Errors.create(req.body, function(err, returnVal) {
+        if (err) return next(err);
+        res.json(returnVal);
+    })
+});
 
-    // Create the entry and define the full file path
-    var logEntry = createReqLogEntry(readableTime, urlName, urlHost, urlPath,
-        statusCode);
-    var fullLogFilePath = filePath + fileName;
+// Create new MongoDB doc in Errors collection for a request error occurrence
+exports.writeErrLogEntry = function(statusCode, resourceName, resourceUrl, requestDateTime, responseData) {
 
-    // Write entry to the general request file
-    fs.appendFile(fullLogFilePath, logEntry, function(err) {
-        if (err) return console.log(err);
-        return null;
+    // Create a new error log entry from data passed to this function
+    var newErrLogEntry = Errors({
+        status_code: statusCode,
+        resource_name: resourceName,
+        resource_url: resourceUrl,
+        response: responseData,
+        request_datetime: requestDateTime
+    });
+
+    // Save the new error log entry to MongoDB
+    newErrLogEntry.save(function(err) {
+        if (err) console.log(err);
+        console.log('Error Log Entry Added');
     });
 };
 
-// Create new file for full page error log file entry
-exports.writeErrLogEntry = function(filePath, compactTime, noSpaceName, pageData,
-                                   statusCode) {
+/**
+ * Events model methods
+ */
 
-    var fullLogFilePath = filePath + '/err-' + statusCode + '-' + compactTime
-        + '-' + noSpaceName + '.html';
-    fs.appendFile(fullLogFilePath, pageData, function(err) {
-        if (err) return console.log(err);
-        return null;
+// Create new MongoDB doc in Events collection for a general event (e.g. URL ping)
+exports.writeGeneralLogEntry = function(eventDateTime, eventType, eventDescription) {
+    // Create a new general log entry from data passed to this function
+    var newGeneralLogEntry = Events({
+        event_datetime: eventDateTime,
+        event_type: eventType,
+        event_description: eventDescription
     });
-}
 
-// Format new general log file entry
-function createReqLogEntry(readableTime, urlName, urlHost, urlPath, statusCode) {
-    return readableTime + '\n'
-        + 'Page Name: ' + urlName + '\n'
-        + 'URL: ' + urlHost + urlPath + '\n'
-        + 'HTTP status code: ' + statusCode + '\n'
-        + '================================\n';
+    // Save the new general log entry to MongoDB
+    newGeneralLogEntry.save(function(err) {
+        if (err) console.log(err);
+        console.log('General Log Entry Added');
+    });
 };
-

@@ -2,11 +2,11 @@
  * Main application file
  *
  * Node.js Module Dependencies
- *  + fs
+ *   fs
  *
  * Internal Module Dependencies
- *  + ./modules/httping.js
- *  + ./modules/urlsIO.js
+ *   ./modules/httping.js
+ *   ./modules/urlsIO.js
  *
  */
 
@@ -16,7 +16,6 @@ var mongoose = require('mongoose');
 
 // Require local modules
 var httping = require(__dirname + '/modules/httping.js');
-var httpingMongo = require(__dirname + '/modules/httpingMongo.js');
 var urlsIO = require(__dirname + '/modules/urlsIO.js');
 
 // Define the urls variables outside of the functions that use the variable so
@@ -43,8 +42,7 @@ var cbGetUrlData = function(urlData) {
     urls = urlData;
 
     // Kick off a set of HTTP requests
-    // httping.pingUrls(urls);
-    httpingMongo.pingUrls(urls);
+    httping.pingUrls(urls);
 
     // console.log(urls);
 };
