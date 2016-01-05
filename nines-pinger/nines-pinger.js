@@ -45,8 +45,10 @@ var cbGetUrlData = function(urlData) {
     // Kick off a set of HTTP requests
     // httping.pingUrls(urls);
     httpingMongo.pingUrls(urls);
+
+    // console.log(urls);
 };
 
 // Call getUrls() with the above callback in order to get the URLs and kick
 // off the requests
-urlsIO.getUrls(cbGetUrlData);
+urlsIO.getUrlsMongo(cbGetUrlData);

@@ -10,6 +10,7 @@
 // Node.js Module Dependencies
 var fs = require('fs');     // Used for reading and writing to local system files
 var path = require('path'); // Used for creating urls to file resources
+var Urls = require('../../models/UrlsMongo');
 
 // Define constants. These may later be placed in a config file.
 const ROOT_DIR = path.join(__dirname, '..');
@@ -21,6 +22,16 @@ exports.getUrls = function(callback) {
 	    if (err) throw err;
 	    callback(JSON.parse(data));
 	});
-}
+};
+
+// Retrieve all URL data from MongoDB-based Urls model
+exports.getUrlsMongo = function(callback) {
+    Urls.find(function(err, returnObj) {
+        if(err) console.log(err);
+        // console.log(returnObj);
+        callback(returnObj);
+    });
+};
+
 
 	

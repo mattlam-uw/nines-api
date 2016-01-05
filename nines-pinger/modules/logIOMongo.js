@@ -12,6 +12,9 @@ var mongoose = require('mongoose');
 var Errors = require('../../models/Errors');
 var Events = require('../../models/Events');
 
+/**
+ * Errors model methods
+ */
 
 /* GET (retrieve all) errors */
 router.get('/', function(req, res, next) {
@@ -21,7 +24,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
-/* GET (retrive all) errors by user_id */
+/* GET (retrieve all) errors by user_id */
 
 /* POST (create new) error */
 router.post('/', function(req, res, next) {
@@ -50,6 +53,11 @@ exports.writeErrLogEntry = function(statusCode, resourceName, resourceUrl, reque
     });
 };
 
+/**
+ * Events model methods
+ */
+
+// Create new MongoDB doc in Events collection for a general event (e.g. URL ping)
 exports.writeGeneralLogEntry = function(eventDateTime, eventType, eventDescription) {
     // Create a new general log entry from data passed to this function
     var newGeneralLogEntry = Events({
