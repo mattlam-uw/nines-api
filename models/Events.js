@@ -11,7 +11,7 @@
 var mongoose = require('mongoose');
 
 // Define Mongoose Schema
-var GeneralSchema = new mongoose.Schema({
+var EventSchema = new mongoose.Schema({
     event_datetime: Date,
     event_type: String,
     event_description: String
@@ -19,4 +19,4 @@ var GeneralSchema = new mongoose.Schema({
 
 // Export mongoose 'Event' model, which will create/use a collection called
 // 'events' in MongoDB
-module.exports = mongoose.model('Event', GeneralSchema);
+module.exports = mongoose.model('Event', EventSchema);
