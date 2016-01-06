@@ -16,7 +16,11 @@ var config = {
     // root directory (typically one directory level up from the location of
     // this file
     "Logs_Dir_Path": "/nines-pinger/logs/",
-    "URLs_File_Path": "/nines-pinger/data/urls.json"
+    "URLs_File_Path": "/nines-pinger/data/urls.json",
+
+    // Number of seconds to wait after last URL request (ping) and closing
+    // of database connection (recommend: 10)
+    "DB_Close_Wait": 5
 };
 
 // Stuff that you shouldn't (need to) touch

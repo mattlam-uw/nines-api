@@ -26,6 +26,9 @@ exports.logFileDir = path.join(__dirname, '..', config.Logs_Dir_Path);
 // Path to urls.json file containing URL data
 exports.urlsFilePath = path.join(__dirname, '..', config.URLs_File_Path);
 
+// Number of seconds to wait after last URL ping before closing DB connection
+exports.dbCloseWait = config.DB_Close_Wait * 1000;
+
 
 
 

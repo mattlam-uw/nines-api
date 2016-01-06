@@ -18,6 +18,7 @@ var path = require('path'); // Used for creating urls to file resources
 const ROOT_DIR = path.join(__dirname, '..', '..');
 
 // Require local modules for interacting with Errors and Events models
+var config = require(ROOT_DIR + '/modules/config-convey'); // Config data
 var db = require(ROOT_DIR + '/modules/database.js');
 var errorIO = require(ROOT_DIR + '/nines-pinger/modules/errorIO_Mongo.js');
 var eventIO = require(ROOT_DIR + '/nines-pinger/modules/eventIO_Mongo.js');
@@ -115,15 +116,17 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
 
                 eventIO.writeEventEntry(reqDateTime, eventType, eventDescription);
 
-                // Check to see if this is the last of the request batch. If it
-                // is, then close the MongoDB connection following a 10 second
-                // wait. I was unable to come up with a more elegant solution
-                // for closing the MongoDB connection without stepping on any
-                // possible pending log writes. I think this is pretty safe.
+                // Close the database connection.
+                // First check to see if this is the last of the request batch.
+                // If it is, then close the MongoDB connection following a wait
+                // period defined in config.js. I was unable to come up with a
+                // more elegant solution for closing the MongoDB connection
+                // without stepping on any possible pending log writes. I
+                // think this is pretty safe.
                 if (iteration == arrUrlsLength - 1) {
                     setTimeout(function() {
                         db.closeConnection()
-                    }, 10000);
+                    }, config.dbCloseWait);
                 }
             
             // If the request method is GET, this was a follow-up request for 
