@@ -18,8 +18,9 @@ var mongoose = require('mongoose'); // Used for interaction with MongoDB-based m
 // Define constants. These may later be placed in a config file.
 const ROOT_DIR = path.join(__dirname, '..');
 
-// Require local modules
-var logIO = require(ROOT_DIR + '/modules/logIO.js');
+// Require local modules for interacting with Errors and Events models
+var errorIO = require(ROOT_DIR + '/modules/errorIO_Mongo.js');
+var eventIO = require(ROOT_DIR + '/modules/eventIO_Mongo.js');
 
 // Function to run through and ping all defined urls
 exports.pingUrls = function(arrUrls) {
@@ -110,7 +111,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                                      + 'path: ' + urlPath + '\n'
                                      + 'response code: ' + res.statusCode;
 
-                logIO.writeGeneralLogEntry(reqDateTime, eventType, eventDescription);
+                eventIO.writeEventEntry(reqDateTime, eventType, eventDescription);
 
                 // Check to see if this is the last of the request batch. If it
                 // is, then close the MongoDB connection following a 10 second
@@ -138,7 +139,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                 var fullUrl = urlProtocol + "://" +  urlHost + urlPath;
 
                 // Log the error response to MongoDB
-                logIO.writeErrLogEntry(res.statusCode, urlName, fullUrl, reqTime, pageData);
+                errorIO.writeErrorEntry(res.statusCode, urlName, fullUrl, reqTime, pageData);
             }
         });
     };
