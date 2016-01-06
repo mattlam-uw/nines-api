@@ -19,21 +19,21 @@ var mongoose = require('mongoose'); // Used for interaction with MongoDB-based m
 
 // Database Methods (Currently using MongoDB and Mongoose)
 
-// Open a connection
+// Open a new database connection
 exports.openConnection = function() {
-    return mongoose.connect('mongodb://localhost/nines', function(err) {
-    	if (err) {
+    mongoose.connect('mongodb://localhost/nines', function(err) {
+        if (err) {
     		console.log('MongoDB connection error', err);
-    		return 0;
     	} else {
-    		return 1;
+    		console.log('MongoDB connection opened');
     	}
     })
 };
 
-// Close the connection
+// Close the database connection
 exports.closeConnection = function() {
-    return mongoose.connection.close()
+    console.log('MongoDB connection closed');
+    mongoose.connection.close();
 };
 
 

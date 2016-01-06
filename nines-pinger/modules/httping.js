@@ -28,12 +28,7 @@ exports.pingUrls = function(arrUrls) {
     // database connection
     if (arrUrls[0] === undefined) {
         console.log('Error - no URL data provided');
-
-        if (db.closeConnection()) {
-            console.log('Database connection closed');
-        } else {
-            console.log('Failed to close database connection');
-        }
+        db.closeConnection();
         return;
     }
 
@@ -126,16 +121,9 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                 // for closing the MongoDB connection without stepping on any
                 // possible pending log writes. I think this is pretty safe.
                 if (iteration == arrUrlsLength - 1) {
-                    setTimeout(
-                        function() {
-                            if (db.closeConnection()) {
-                                console.log('Database connection closed');
-                            } else {
-                                console.log('Failed to close database connection');
-                            }
-                        },
-                        10000
-                    );
+                    setTimeout(function() {
+                        db.closeConnection()
+                    }, 10000);
                 }
             
             // If the request method is GET, this was a follow-up request for 
