@@ -12,16 +12,12 @@
 
 // Node.js Module Dependencies
 var http = require('http'); // Used to make HTTP requests
-var path = require('path'); // Used for creating urls to file resources
 
-// Define constants. These may later be placed in a config file.
-const ROOT_DIR = path.join(__dirname, '..', '..');
-
-// Require local modules for interacting with Errors and Events models
-var config = require(ROOT_DIR + '/modules/config-convey'); // Config data
-var db = require(ROOT_DIR + '/modules/database.js');
-var errorIO = require(ROOT_DIR + '/nines-pinger/modules/errorIO_Mongo.js');
-var eventIO = require(ROOT_DIR + '/nines-pinger/modules/eventIO_Mongo.js');
+// Local Module Dependencies
+var config = require('../../modules/config-convey'); // Config data
+var db = require('../../modules/database.js'); // Used for managing DB connections
+var errorIO = require('./errorIO_Mongo.js'); // Methods for error IO ops
+var eventIO = require('./eventIO_Mongo.js'); // Methods for event IO ops
 
 // Function to run through and ping all defined urls
 exports.pingUrls = function(arrUrls) {

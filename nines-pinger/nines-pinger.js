@@ -10,18 +10,12 @@
  *
  */
 
-// Node.js Module Dependencies
-var path = require('path'); // Used for creating urls to file resources
-
-// Define constants. These may later be placed in a config file.
-const ROOT_DIR = path.join(__dirname, '..');
-
 // Require local modules for interacting with Errors and Events models
-var db = require(ROOT_DIR + '/modules/database.js');
+var db = require('../modules/database.js');
 
 // Require local modules
-var httping = require(__dirname + '/modules/httping.js');
-var urlsIO = require(__dirname + '/modules/urlsIO_Mongo.js');
+var httping = require('./modules/httping.js');
+var urlsIO = require('./modules/urlsIO_Mongo.js');
 
 // Open a database connection
 db.openConnection();
