@@ -13,14 +13,14 @@
 // Node.js Module Dependencies
 var http = require('http'); // Used to make HTTP requests
 var path = require('path'); // Used for creating urls to file resources
-var mongoose = require('mongoose'); // Used for interaction with MongoDB-based model
 
 // Define constants. These may later be placed in a config file.
-const ROOT_DIR = path.join(__dirname, '..');
+const ROOT_DIR = path.join(__dirname, '..', '..');
 
 // Require local modules for interacting with Errors and Events models
-var errorIO = require(ROOT_DIR + '/modules/errorIO_Mongo.js');
-var eventIO = require(ROOT_DIR + '/modules/eventIO_Mongo.js');
+var db = require(ROOT_DIR + '/modules/database.js');
+var errorIO = require(ROOT_DIR + '/nines-pinger/modules/errorIO_Mongo.js');
+var eventIO = require(ROOT_DIR + '/nines-pinger/modules/eventIO_Mongo.js');
 
 // Function to run through and ping all defined urls
 exports.pingUrls = function(arrUrls) {
@@ -121,8 +121,9 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                 if (iteration == arrUrlsLength - 1) {
                     setTimeout(
                         function() {
-                            mongoose.connection.close();
-                            console.log('MongoDB connection closed');
+                            db.closeConnection();
+                            // mongoose.connection.close();
+                            console.log('Database connection closed');
                         },
                         10000
                     );

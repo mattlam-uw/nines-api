@@ -11,18 +11,20 @@
  */
 
 // Node.js Module Dependencies
-var mongoose = require('mongoose');
+var path = require('path'); // Used for creating urls to file resources
+
+// Define constants. These may later be placed in a config file.
+const ROOT_DIR = path.join(__dirname, '..');
+
+// Require local modules for interacting with Errors and Events models
+var db = require(ROOT_DIR + '/modules/database.js');
 
 // Require local modules
 var httping = require(__dirname + '/modules/httping.js');
 var urlsIO = require(__dirname + '/modules/urlsIO_Mongo.js');
 
-
-// Open a MongoDB connection using Mongoose
-mongoose.connect('mongodb://localhost/nines', function(err) {
-    err ? console.log('MongoDB connection error', err)
-        : console.log('MongoDB connection successful');
-});
+// Open a database connection
+db.openConnection();
 
 /**
  * Callback function to be passed with call to getUrls(). This function will
