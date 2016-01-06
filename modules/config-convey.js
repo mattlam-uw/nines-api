@@ -29,6 +29,9 @@ exports.urlsFilePath = path.join(__dirname, '..', config.URLs_File_Path);
 // Number of seconds to wait after last URL ping before closing DB connection
 exports.dbCloseWait = config.DB_Close_Wait * 1000;
 
+// HTTP Status Code threshold for sending a follow-up full page request
+exports.statusCodeThreshold = config.Status_Code_Threshold;
+
 
 
 

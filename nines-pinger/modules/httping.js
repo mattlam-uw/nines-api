@@ -26,7 +26,7 @@ var eventIO = require(ROOT_DIR + '/nines-pinger/modules/eventIO_Mongo.js');
 // Function to run through and ping all defined urls
 exports.pingUrls = function(arrUrls) {
     // Don't do anything if the array of URL data is empty; also close the
-    // database connection
+    // database connection end return out of this function
     if (arrUrls[0] === undefined) {
         console.log('Error - no URL data provided');
         db.closeConnection();
@@ -96,8 +96,9 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
             // request to retrieve the full page data.
             if (method == 'HEAD') {
                 
-                // If status code >= 400, follow-up with a GET request.
-                if (res.statusCode >= 400) {
+                // If status code >= threshold set in config, follow-up with a
+                // GET request.
+                if (res.statusCode >= config.statusCodeThreshold) {
                     // Set up for the follow-up request
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
                     var fullReqCallback = generateCallback(urlName, urlHost,
