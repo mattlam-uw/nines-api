@@ -24,9 +24,16 @@ var eventIO = require(ROOT_DIR + '/nines-pinger/modules/eventIO_Mongo.js');
 
 // Function to run through and ping all defined urls
 exports.pingUrls = function(arrUrls) {
-    // Don't do anything if no parameter values provided
-    if (!arrUrls) {
+    // Don't do anything if the array of URL data is empty; also close the
+    // database connection
+    if (arrUrls[0] === undefined) {
         console.log('Error - no URL data provided');
+
+        if (db.closeConnection()) {
+            console.log('Database connection closed');
+        } else {
+            console.log('Failed to close database connection');
+        }
         return;
     }
 
