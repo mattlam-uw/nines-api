@@ -21,15 +21,19 @@ var mongoose = require('mongoose'); // Used for interaction with MongoDB-based m
 
 // Open a connection
 exports.openConnection = function() {
-    mongoose.connect('mongodb://localhost/nines', function(err) {
-        err ? console.log('MongoDB connection error', err)
-            : console.log('MongoDB connection successful');
-    });
+    return mongoose.connect('mongodb://localhost/nines', function(err) {
+    	if (err) {
+    		console.log('MongoDB connection error', err);
+    		return 0;
+    	} else {
+    		return 1;
+    	}
+    })
 };
 
 // Close the connection
 exports.closeConnection = function() {
-    mongoose.connection.close();
+    return mongoose.connection.close()
 };
 
 

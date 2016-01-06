@@ -121,9 +121,11 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                 if (iteration == arrUrlsLength - 1) {
                     setTimeout(
                         function() {
-                            db.closeConnection();
-                            // mongoose.connection.close();
-                            console.log('Database connection closed');
+                            if (db.closeConnection()) {
+                                console.log('Database connection closed');
+                            } else {
+                                console.log('Failed to close database connection');
+                            }
                         },
                         10000
                     );

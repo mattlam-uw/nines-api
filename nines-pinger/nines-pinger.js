@@ -24,7 +24,11 @@ var httping = require(__dirname + '/modules/httping.js');
 var urlsIO = require(__dirname + '/modules/urlsIO_Mongo.js');
 
 // Open a database connection
-db.openConnection();
+if (db.openConnection()) {
+    console.log('Database connection successful');
+} else {
+	console.log('Database connection failure');
+}
 
 /**
  * Callback function to be passed with call to getUrls(). This function will
