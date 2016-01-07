@@ -3,17 +3,16 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
-// Model dependency
-var Errors = require('../models/Errors.js');
-// Config data dependency
-var config = require('../modules/config-convey');
+// Local Module Dependencies
+var Errors = require('../nines-pinger/modules/errorIO_Mongo.js'); // Errors model
+var config = require('../modules/config-convey'); // Config data
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
 //       separate GET requests for status codes, associated counts, and
 //       associated file names. But for now, just returning the whole object
 router.get('/', function(req, res, next) {
-    Errors.getReqErrStats(config.logFileDir, function(errors) {
+    Errors.getErrors(function(errors) {
         res.json(errors);
     });
 });

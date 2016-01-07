@@ -4,7 +4,7 @@ var router = express.Router();
 var path = require('path');
 
 // Model Dependency
-var Urls = require('../models/Urls.js');
+var Urls = require('../models/Urls_Mongo.js');
 // Config data dependency
 var config = require('../modules/config-convey');
 

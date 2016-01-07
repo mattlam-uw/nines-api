@@ -3,12 +3,25 @@
  * outlined in Errors_Mongo.js model
  **/
 
-// Dependencies:
+// Node Module Dependencies
 var mongoose = require('mongoose');
+
+// Local Module Dependencies
 var Errors = require('../../models/Errors_Mongo');
 
 /**
- * Errors model methods
+ * API Methods
+ */
+
+exports.getErrors = function(callback) {
+    Errors.find(function(err, returnVal) {
+        if (err) return next(err);
+        callback(returnVal);
+    });
+}
+
+/**
+ * Non-API methods
  */
 
 // Create new MongoDB doc in Errors collection for a request error occurrence

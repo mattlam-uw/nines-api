@@ -8,8 +8,12 @@ var bodyParser = require('body-parser');
 var config = require('./modules/config-convey'); // Config data
 var errors = require('./routes/errors'); // Methods for processing calls to /errors
 var urls = require('./routes/urls'); // Methods for processing calls to /routes
+var db = require('./modules/database'); // Provide connection to database
 
 var app = express();
+
+// Connect to database
+db.openConnection();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
