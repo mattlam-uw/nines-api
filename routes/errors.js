@@ -1,10 +1,18 @@
+/**
+ * API Router for /errors
+ * Translates API URL (resource) calls to calls against IO methods for Errors Model.
+ * Current Errors model is MongoDB-based. If a different database is to be used,
+ * then a new IO methods file for the model will need to be provided and
+ * required here in place of errorIO_API_Mongo.js
+ */
+
 // Node.js Module Dependencies
 var express = require('express');
 var router = express.Router();
 var path = require('path');
 
 // Local Module Dependencies
-var Errors = require('../nines-pinger/modules/errorIO_Mongo.js'); // Errors model
+var Errors = require('../modules/errorIO_API_Mongo.js'); // Mongo-based Errors model IO
 var config = require('../modules/config-convey'); // Config data
 
 /* GET (retrieve all error data -- provided in one object) */
@@ -12,10 +20,14 @@ var config = require('../modules/config-convey'); // Config data
 //       separate GET requests for status codes, associated counts, and
 //       associated file names. But for now, just returning the whole object
 router.get('/', function(req, res, next) {
-    Errors.getErrors(function(errors) {
-        res.json(errors);
+    Errors.getErrors(function(data) {
+        res.json(data);
     });
 });
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// EVERYTHING BELOW MUST BE REFACTORED
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 /* GET status codes */
 router.get('/codes', function(req, res, next) {

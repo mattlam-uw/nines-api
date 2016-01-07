@@ -1,6 +1,6 @@
 /**
- * IO Interface for MongoDB collection defined and supported by Mongoose Schema
- * outlined in Errors_Mongo.js model
+ * Nines Pinger internal IO Interface for MongoDB collection defined and
+ * supported by Mongoose Schema outlined in Errors_Mongo.js model
  **/
 
 // Node Module Dependencies
@@ -10,18 +10,7 @@ var mongoose = require('mongoose');
 var Errors = require('../../models/Errors_Mongo');
 
 /**
- * API Methods
- */
-
-exports.getErrors = function(callback) {
-    Errors.find(function(err, returnVal) {
-        if (err) return next(err);
-        callback(returnVal);
-    });
-}
-
-/**
- * Non-API methods
+ * Errors model IO methods
  */
 
 // Create new MongoDB doc in Errors collection for a request error occurrence
