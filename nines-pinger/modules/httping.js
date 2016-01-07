@@ -1,36 +1,41 @@
 /**
  * This module contains all methods needed to use the given URL data to send
  * requests to the URLs. The only method currently exposed for client code
- * use is pingUrls(). All other methods are used within this module.
+ * use is pingUrls(). All other methods are private to this module.
  *
  * The initial request to a URL is always just a request for the response
  * headers (method = 'HEAD'). If the response for any request results in a
- * status code of 400 or more, then a full-page (method = 'GET') follow-up
- * request is sent to the URL in order to get any valuable error message
- * information that might be included in the page response.
- */
+ * status code equal to or exceding the threshold set in config.js, then a 
+ * full-page (method = 'GET') follow-up request is sent to the URL in order 
+ * to get any valuable error message information that might be included in the 
+ * page response.
+ **/
 
 // Node.js Module Dependencies
 var http = require('http'); // Used to make HTTP requests
 
 // Local Module Dependencies
-var config = require('../../modules/config-convey'); // Config data
+var config = require('../../modules/config-convey'); // Config data from config.js
 var db = require('../../modules/database.js'); // Used for managing DB connections
-var errorIO = require('./errorIO_Mongo.js'); // Methods for error IO ops
-var eventIO = require('./eventIO_Mongo.js'); // Methods for event IO ops
+var errorIO = require('./errorIO_Mongo.js'); // Methods for errors model IO ops
+var eventIO = require('./eventIO_Mongo.js'); // Methods for events model IO ops
 
-// Function to run through and ping all defined urls
+/* ----------------------------------------------------------------------------
+   Functions exposed to client code
+   ------------------------------------------------------------------------- */
+
+// Function to run through and ping all defined URLs
 exports.pingUrls = function(arrUrls) {
-    // Don't do anything if the array of URL data is empty; also close the
-    // database connection end return out of this function
+    // Check for URL data passed to function. If the array is empty, then close 
+    // the database connection end return out of this function
     if (arrUrls[0] === undefined) {
         console.log('Error - no URL data provided');
         db.closeConnection();
         return;
     }
 
-    // Iterate through the array of objects containing the URLs to ping and
-    // send a request for each URL
+    // URL data has been received, so iterate through the array of objects 
+    // containing the URLs and send requests for each URL
     for (var i = 0; i < arrUrls.length; i++) {
         var reqMethod = 'HEAD'; // Method of http request to be sent
         var reqDateTime = new Date(); // Timestamp for request
@@ -60,6 +65,10 @@ exports.pingUrls = function(arrUrls) {
     }
 }
 
+/* ----------------------------------------------------------------------------
+   Private Functions (used in this module only)
+   ------------------------------------------------------------------------- */
+
 // Function to generate options to be used for http.request
 function generateOptions(host, path, method) {
     return {
@@ -88,12 +97,12 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
         // log the response info
         res.on('end', function() {
             // If the request method is HEAD, log the output from the response.
-            // If the status code was >= 400 as well, then do a follow-up GET
-            // request to retrieve the full page data.
+            // If the status code was >= threshold set in config.js, then do a 
+            // follow-up GET request to retrieve the full page data.
             if (method == 'HEAD') {
                 
-                // If status code >= threshold set in config, follow-up with a
-                // GET request.
+                // If status code >= threshold set in config.js, follow-up with 
+                // a GET request.
                 if (res.statusCode >= config.statusCodeThreshold) {
                     // Set up for the follow-up request
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
@@ -104,7 +113,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
 
-                // Add log of this request to the General Log
+                // Add log of this request to the events Log
                 var eventType = urlProtocol + ' request';
                 var eventDescription = 'name: ' + urlName + '\n'
                                      + 'host: ' + urlHost + '\n'
@@ -127,9 +136,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                 }
             
             // If the request method is GET, this was a follow-up request for 
-            // a full page. Log this in a separate file. Each follow-up request
-            // gets its own file. The name of the file will be:
-            // "err-[timestamp]-[name for URL].html
+            // a full page. Log this in the errors log.
             } else if (method == 'GET') {
                 // Get the current date for logging
                 var reqTime = new Date();

@@ -12,7 +12,7 @@ var router = express.Router();
 var path = require('path');
 
 // Local Module Dependencies
-var Urls = require('../modules/urlsIO_API_Mongo.js'); // Urls model IO
+var Urls = require('../models/urls_API_IO_Mongo.js'); // Urls model IO
 var config = require('../modules/config-convey'); // Config data
 
 /* GET (retrieve all error data -- provided in one object) */
