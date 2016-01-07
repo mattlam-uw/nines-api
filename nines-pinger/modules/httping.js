@@ -16,9 +16,9 @@ var http = require('http'); // Used to make HTTP requests
 
 // Local Module Dependencies
 var config = require('../../modules/config-convey'); // Config data from config.js
-var db = require('../../modules/database.js'); // Used for managing DB connections
-var errorIO = require('./errorIO_Mongo.js'); // Methods for errors model IO ops
-var eventIO = require('./eventIO_Mongo.js'); // Methods for events model IO ops
+var db = require('../../modules/database.js'); // Open and close DB connections
+var errorIO = require('../models/errors_Ping_IO_Mongo.js'); // Errors model IO ops
+var eventIO = require('../models/events_Ping_IO_Mongo.js'); // Events model IO ops
 
 /* ----------------------------------------------------------------------------
    Functions exposed to client code

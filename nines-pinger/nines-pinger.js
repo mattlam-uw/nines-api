@@ -15,7 +15,7 @@ var db = require('../modules/database.js');
 
 // Require local modules
 var httping = require('./modules/httping.js');
-var urlsIO = require('./modules/urlsIO_Mongo.js');
+var urlsIO = require('./models/urls_Ping_IO_Mongo.js');
 
 // Open a database connection
 db.openConnection();
