@@ -1,9 +1,9 @@
 /**
- * API Router for /errors
- * Translates API URL (resource) calls to calls against IO methods for Errors Model.
- * Current Errors model is MongoDB-based. If a different database is to be used,
+ * API Router for /events
+ * Translates API URL (resource) calls to calls against IO methods for Events Model.
+ * Current Events model is MongoDB-based. If a different database is to be used,
  * then a new IO methods file for the model will need to be provided and
- * required here in place of errors_API_IO_Mongo.js
+ * required here in place of events_API_IO_Mongo.js
  */
 
 // Node.js Module Dependencies
@@ -12,14 +12,14 @@ var router = express.Router();
 var path = require('path');
 
 // Local Module Dependencies
-var Errors = require('../models/errors_API_IO_Mongo.js'); // Mongo-based Errors model IO
+var Events = require('../models/events_API_IO_Mongo.js'); // Mongo-based Events model IO
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
 //       separate GET requests for status codes, associated counts, and
 //       associated file names. But for now, just returning the whole object
 router.get('/', function(req, res, next) {
-    Errors.getErrors(function(data) {
+    Events.getEvents(function(data) {
         res.json(data);
     });
 });
@@ -37,7 +37,7 @@ router.get('/codes', function(req, res, next) {
             statusCodes.push(code);
         }
         res.json(statusCodes);
-   });
+    });
 });
 
 /* GET count for given status code */
@@ -55,6 +55,5 @@ router.get('/:id/files', function(req, res, next) {
         res.json(errors[req.params.id].files);
     });
 });
-
 
 module.exports = router;
