@@ -1,7 +1,7 @@
 /**
- * API Router for /events
- * Translates API URL (resource) calls to calls against IO methods for Events Model.
- * Current Events model is MongoDB-based. If a different database is to be used,
+ * API Router for /heads
+ * Translates API URL (resource) calls to calls against IO methods for Heads Model.
+ * Current Heads model is MongoDB-based. If a different database is to be used,
  * then a new IO methods file for the model will need to be provided and
  * required here in place of events_API_IO_Mongo.js
  */
@@ -12,14 +12,14 @@ var router = express.Router();
 var path = require('path');
 
 // Local Module Dependencies
-var Events = require('../models/events_API_IO_Mongo.js'); // Mongo-based Events model IO
+var Heads = require('../models/heads_API_IO_Mongo.js'); // Mongo-based Heads model IO
 
 /* GET (retrieve all error data -- provided in one object) */
 // NOTE: Keeping it simple for now. I may decide in the future to provide
 //       separate GET requests for status codes, associated counts, and
 //       associated file names. But for now, just returning the whole object
 router.get('/', function(req, res, next) {
-    Events.getEvents(function(data) {
+    Heads.getHeads(function(data) {
         res.json(data);
     });
 });

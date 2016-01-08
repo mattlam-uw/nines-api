@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var config = require('./modules/config-convey'); // Config data
 var errors = require('./routes/errors'); // Methods for processing calls to /errors
-var events = require('./routes/events'); // Methods for processing calls to /events
+var heads = require('./routes/heads'); // Methods for processing calls to /events
 var urls = require('./routes/urls'); // Methods for processing calls to /routes
 var db = require('./modules/database'); // Provide connection to database
 
@@ -36,7 +36,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/errors', errors);
-app.use('/events', events);
+app.use('/heads', heads);
 app.use('/urls', urls);
 
 /// catch 404 and forward to error handler

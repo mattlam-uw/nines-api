@@ -5,24 +5,24 @@
 
 // Dependencies:
 var mongoose = require('mongoose');
-var Events = require('../../models/Events_Mongo');
+var Events = require('../../models/Heads_Mongo');
 
 /**
  * Events model methods
  */
 
 // Create new MongoDB doc in Events collection for a general event (e.g. URL ping)
-exports.writeEventEntry = function(eventDateTime, eventType, eventDescription) {
+exports.writeEventEntry = function(eventDateTime, urlID, statusCode) {
     // Create a new general log entry from data passed to this function
     var newEventEntry = Events({
-        event_datetime: eventDateTime,
-        event_type: eventType,
-        event_description: eventDescription
+        datetime: eventDateTime,
+        url_id: urlID,
+        status_code: statusCode
     });
 
     // Save the new general log entry to MongoDB
     newEventEntry.save(function(err) {
         if (err) console.log(err);
-        console.log('General Log Entry Added');
+        console.log('HEAD request logged');
     });
 };

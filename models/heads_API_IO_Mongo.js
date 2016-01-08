@@ -7,14 +7,14 @@
 var mongoose = require('mongoose');
 
 // Local Module Dependencies
-var Events = require('../models/Events_Mongo');
+var Heads = require('../models/Heads_Mongo');
 
 /**
  * API Methods
  */
 
-exports.getEvents = function(callback) {
-    Events.find(function(err, returnVal) {
+exports.getHeads = function(callback) {
+    Heads.find(function(err, returnVal) {
         if (err) return next(err);
         callback(returnVal);
     });

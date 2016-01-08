@@ -18,7 +18,7 @@ var http = require('http'); // Used to make HTTP requests
 var config = require('../../modules/config-convey'); // Config data from config.js
 var db = require('../../modules/database.js'); // Open and close DB connections
 var errorIO = require('../models/errors_Ping_IO_Mongo.js'); // Errors model IO ops
-var eventIO = require('../models/events_Ping_IO_Mongo.js'); // Events model IO ops
+var headIO = require('../models/heads_Ping_IO_Mongo.js'); // Heads model IO ops
 
 /* ----------------------------------------------------------------------------
    Functions exposed to client code
@@ -45,8 +45,8 @@ exports.pingUrls = function(arrUrls) {
 
         // Generate request callback
         var callback = generateCallback(arrUrls[i].name, arrUrls[i].host,
-            arrUrls[i].path, arrUrls[i].protocol, reqMethod, reqDateTime, i,
-            arrUrls.length);
+            arrUrls[i].path, arrUrls[i].protocol, arrUrls[i]._id, reqMethod,
+            reqDateTime, i, arrUrls.length);
 
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol == 'http') {
@@ -79,8 +79,8 @@ function generateOptions(host, path, method) {
 }
 
 // Function to generate a callback to be used for http.request
-function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
-                          reqDateTime, iteration, arrUrlsLength) {
+function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
+                          method, reqDateTime, iteration, arrUrlsLength) {
 
     return function(res) {
 
@@ -107,20 +107,22 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, method,
                     // Set up for the follow-up request
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
                     var fullReqCallback = generateCallback(urlName, urlHost,
-                            urlPath, urlProtocol, 'GET', reqDateTime, iteration,
-                            arrUrlsLength);
+                            urlPath, urlProtocol, urlID, 'GET', reqDateTime,
+                            iteration, arrUrlsLength);
                     // Execute the follow-up request
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
 
                 // Add log of this request to the events Log
+                /*
                 var eventType = urlProtocol + ' request';
                 var eventDescription = 'name: ' + urlName + '\n'
                                      + 'host: ' + urlHost + '\n'
                                      + 'path: ' + urlPath + '\n'
                                      + 'response code: ' + res.statusCode;
+                */
 
-                eventIO.writeEventEntry(reqDateTime, eventType, eventDescription);
+                headIO.writeEventEntry(reqDateTime, urlID, res.statusCode);
 
                 // Close the database connection.
                 // First check to see if this is the last of the request batch.
