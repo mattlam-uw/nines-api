@@ -15,14 +15,18 @@ var path = require('path');
 var Urls = require('../models/urls_API_IO_Mongo.js'); // Urls model IO
 var config = require('../modules/config-convey'); // Config data
 
-/* GET (retrieve all error data -- provided in one object) */
-// NOTE: Keeping it simple for now. I may decide in the future to provide
-//       separate GET requests for status codes, associated counts, and
-//       associated file names. But for now, just returning the whole object
+/* GET (retrieve all) url data */
 router.get('/', function(req, res, next) {
     Urls.getUrls(function(data) {
         res.json(data);
     });
+});
+
+/* POST (create one) url entry */
+router.post('/', function(req, res, next) {
+   Urls.postUrl(req, function(data) {
+       res.json(data);
+   });
 });
 
 module.exports = router;
