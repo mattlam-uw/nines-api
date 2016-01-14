@@ -15,11 +15,13 @@ var UrlGroups = require('../models/UrlGroups_Mongo');
 
 // Retrieve all URL Groups data
 exports.getUrlGroups = function(callback) {
-    Urls.find(function(err, returnVal) {
+    UrlGroups.find(function(err, returnVal) {
         if (err) return next(err);
         callback(returnVal);
     });
 }
+
+/* ENABLE WHEN READY
 
 // Post a new URL Group
 exports.postUrlGroup = function(req, callback) {
@@ -28,3 +30,5 @@ exports.postUrlGroup = function(req, callback) {
         callback(returnVal);
     });
 }
+
+*/
