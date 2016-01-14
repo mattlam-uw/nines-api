@@ -7,19 +7,21 @@
 var mongoose = require('mongoose');
 
 // Local Module Dependencies
-var Urls = require('../models/UrlGroups-Urls_Mongo');
+var UrlGroupUrls = require('../models/UrlGroupUrls_Mongo');
 
 /**
  * API Methods
  */
 
-// Retrieve all URL Groups - URL relationship data
-exports.getUrlGroupsUrls = function(callback) {
-    Urls.find(function(err, returnVal) {
+// Retrieve all URL Group - URLs relationship data
+exports.getUrlGroupUrls = function(callback) {
+    UrlGroupUrls.find(function(err, returnVal) {
         if (err) return next(err);
         callback(returnVal);
     });
 }
+
+/* ENABLE WHEN NEEDED
 
 // Post a new URL Group - URL relationship
 exports.postUrlGroupsUrl = function(req, callback) {
@@ -28,3 +30,5 @@ exports.postUrlGroupsUrl = function(req, callback) {
         callback(returnVal);
     });
 }
+
+*/

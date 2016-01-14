@@ -14,4 +14,4 @@ var UrlGroupSchema = new mongoose.Schema({
 
 // Export mongoose 'UrlGroups' model, which will create/use a collection called
 // 'urlgroups' in MongoDB
-module.exports = mongoose.model('UrlGroup', UrlGroupSchema);
+module.exports = mongoose.model('Urlgroup', UrlGroupSchema);

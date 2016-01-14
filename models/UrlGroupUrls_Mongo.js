@@ -8,11 +8,11 @@
 var mongoose = require('mongoose');
 
 // Define Mongoose Schema
-var UrlGroups-UrlsSchema = new mongoose.Schema({
+var UrlGroupUrlSchema = new mongoose.Schema({
     urlgroup_id: String,
     url_id: String
 });
 
 // Export mongoose 'UrlGroups-Urls' model, which will create/use a collection called
-// 'urlgroups-urls' in MongoDB
-module.exports = mongoose.model('UrlGroups-url', UrlGroup-UrlSchema);
+// 'urlgroupurls' in MongoDB
+module.exports = mongoose.model('Urlgroupurl', UrlGroupUrlSchema);
