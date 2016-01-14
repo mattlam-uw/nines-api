@@ -8,7 +8,7 @@
 var mongoose = require('mongoose');
 
 // Define Mongoose Schema
-var UrlGroupsSchema = new mongoose.Schema({
+var UrlGroupSchema = new mongoose.Schema({
     name: String
 });
 

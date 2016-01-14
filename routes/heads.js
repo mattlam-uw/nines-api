@@ -9,15 +9,11 @@
 // Node.js Module Dependencies
 var express = require('express');
 var router = express.Router();
-var path = require('path');
 
 // Local Module Dependencies
 var Heads = require('../models/heads_API_IO_Mongo.js'); // Mongo-based Heads model IO
 
-/* GET (retrieve all error data -- provided in one object) */
-// NOTE: Keeping it simple for now. I may decide in the future to provide
-//       separate GET requests for status codes, associated counts, and
-//       associated file names. But for now, just returning the whole object
+// GET (retrieve all header request data -- provided in one object)
 router.get('/', function(req, res, next) {
     Heads.getHeads(function(data) {
         res.json(data);
@@ -28,7 +24,8 @@ router.get('/', function(req, res, next) {
 // EVERYTHING BELOW MUST BE REFACTORED
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-/* GET status codes */
+/*
+// GET status codes
 router.get('/codes', function(req, res, next) {
     Errors.getReqErrStats(config.logFileDir, function(errors) {
         var statusCodes = [];
@@ -40,7 +37,7 @@ router.get('/codes', function(req, res, next) {
     });
 });
 
-/* GET count for given status code */
+// GET count for given status code
 router.get('/:id/count', function(req, res, next) {
     Errors.getReqErrStats(config.logFileDir, function(errors) {
         var result = [];
@@ -49,11 +46,12 @@ router.get('/:id/count', function(req, res, next) {
     });
 });
 
-/* GET file names for given status code */
+// GET file names for given status code
 router.get('/:id/files', function(req, res, next) {
     Errors.getReqErrStats(config.logFileDir, function(errors) {
         res.json(errors[req.params.id].files);
     });
 });
+*/
 
 module.exports = router;

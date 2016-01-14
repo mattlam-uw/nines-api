@@ -8,7 +8,8 @@ var bodyParser = require('body-parser');
 var config = require('./modules/config-convey'); // Config data
 var errors = require('./routes/errors'); // Methods for processing calls to /errors
 var heads = require('./routes/heads'); // Methods for processing calls to /events
-var urls = require('./routes/urls'); // Methods for processing calls to /routes
+var urls = require('./routes/urls'); // Methods for processing calls to /urls
+var urlgroups = require('./routes/urlgroups'); // Methods for processing calls to /urlgroups
 var db = require('./modules/database'); // Provide connection to database
 
 var app = express();
@@ -38,10 +39,12 @@ app.use(function(req, res, next) {
 app.use('/errors', errors);
 app.use('/heads', heads);
 app.use('/urls', urls);
+app.use('/urlgroups', urlgroups);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
+    err.status = 404;
     err.status = 404;
     next(err);
 });
