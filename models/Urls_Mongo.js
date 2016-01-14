@@ -1,5 +1,5 @@
 /**
- * General Event Log Model
+ * Urls Model
  *
  * This model provides data around URLs to be pinged
  **/
