@@ -21,14 +21,10 @@ exports.getUrlGroups = function(callback) {
     });
 }
 
-/* ENABLE WHEN READY
-
 // Post a new URL Group
 exports.postUrlGroup = function(req, callback) {
-    Urls.create(req.body, function(err, returnVal) {
+    UrlGroups.create(req.body, function(err, returnVal) {
         if (err) return next(err);
         callback(returnVal);
     });
 }
-
-*/

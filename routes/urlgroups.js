@@ -20,14 +20,11 @@ router.get('/', function(req, res, next) {
     });
 });
 
-/* ENABLE WHEN NEEDED
-
 // POST (create one) url group entry
 router.post('/', function(req, res, next) {
     UrlGroups.postUrlGroup(req, function(data) {
         res.json(data);
     });
 });
-*/
 
 module.exports = router;
