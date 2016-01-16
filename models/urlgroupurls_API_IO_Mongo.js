@@ -13,7 +13,7 @@ var UrlGroupUrls = require('../models/UrlGroupUrls_Mongo');
  * API Methods
  */
 
-// Retrieve all URL Group - URLs relationship data
+// Retrieve all URL Group-URLs relationship data
 exports.getUrlGroupUrls = function(callback) {
     UrlGroupUrls.find(function(err, returnVal) {
         if (err) return next(err);
@@ -21,14 +21,11 @@ exports.getUrlGroupUrls = function(callback) {
     });
 }
 
-/* ENABLE WHEN NEEDED
-
-// Post a new URL Group - URL relationship
-exports.postUrlGroupsUrl = function(req, callback) {
-    Urls.create(req.body, function(err, returnVal) {
+// Post a new URL Group-URL relationship
+exports.postUrlGroupUrl = function(req, callback) {
+    UrlGroupUrls.create(req.body, function(err, returnVal) {
         if (err) return next(err);
         callback(returnVal);
     });
 }
 
-*/

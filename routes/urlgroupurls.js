@@ -13,23 +13,20 @@ var router = express.Router();
 
 // Local Module Dependencies
 // UrlGroups-Urls model IO
-var UrlGroupURLs = require('../models/urlgroupurls_API_IO_Mongo.js');
+var UrlGroupUrls = require('../models/urlgroupurls_API_IO_Mongo.js');
 
 // GET (retrieve all) url group - url relationship data
 router.get('/', function(req, res, next) {
-    UrlGroupURLs.getUrlGroupUrls(function(data) {
+    UrlGroupUrls.getUrlGroupUrls(function(data) {
         res.json(data);
     });
 });
 
-/* ENABLE WHEN NEEDED
-
- // POST (create one) url group entry
- router.post('/', function(req, res, next) {
- UrlGroups.postUrlGroup(req, function(data) {
- res.json(data);
- });
- });
- */
+// POST (create one) url group url entry
+router.post('/', function(req, res, next) {
+    UrlGroupUrls.postUrlGroupUrl(req, function(data) {
+        res.json(data);
+    });
+});
 
 module.exports = router;
