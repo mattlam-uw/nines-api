@@ -34,6 +34,13 @@ exports.pingUrls = function(arrUrls) {
         return;
     }
 
+    // The database connection will be closed following a timed delay after the
+    // last ping request has been sent. This Object will be used to store the
+    // timer controlling the delay. I am using and object because it will be
+    // passed by reference. Thus, each callback will not have its own delay
+    // timer instance. The same instance will be used by all callbacks.
+    var dbCloseTimer = {};
+
     // URL data has been received, so iterate through the array of objects 
     // containing the URLs and send requests for each URL
     for (var i = 0; i < arrUrls.length; i++) {
@@ -46,7 +53,7 @@ exports.pingUrls = function(arrUrls) {
         // Generate request callback
         var callback = generateCallback(arrUrls[i].name, arrUrls[i].host,
             arrUrls[i].path, arrUrls[i].protocol, arrUrls[i]._id, reqMethod,
-            reqDateTime, i, arrUrls.length);
+            reqDateTime, dbCloseTimer);
 
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
@@ -83,7 +90,7 @@ function generateOptions(host, path, method) {
 
 // Function to generate a callback to be used for http.request
 function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
-                          method, reqDateTime, iteration, arrUrlsLength) {
+                          method, reqDateTime, timer) {
 
     return function(res) {
 
@@ -111,7 +118,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
                     var fullReqCallback = generateCallback(urlName, urlHost,
                             urlPath, urlProtocol, urlID, 'GET', reqDateTime,
-                            iteration, arrUrlsLength);
+                            timer);
                     // Execute the follow-up request
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
@@ -127,21 +134,20 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
 
                 headIO.writeHeadsEntry(reqDateTime, urlID, res.statusCode);
 
-                // Close the database connection.
-                // First check to see if this is the last of the request batch.
-                // If it is, then close the MongoDB connection following a wait
-                // period defined in config.js. I was unable to come up with a
-                // more elegant solution for closing the MongoDB connection
-                // without stepping on any possible pending log writes. I
-                // think this is pretty safe.
-                console.log('iteration:', iteration);
-                console.log('arrUrlsLength - 1:', arrUrlsLength - 1);
-                if (iteration === arrUrlsLength - 1) {
-                    setTimeout(function() {
-                        db.closeConnection()
-                    }, config.dbCloseWait);
+                // Close the database connection. Because there may be one or
+                // more outstanding responses to receive and log, we want to
+                // give those responses a chance to be received. We'll set a
+                // timer such that the db connection will be closed when the
+                // timer expires. This timer is set with the first response,
+                // and then cancelled and set anew with each subsequent
+                // response. The timer delay time is set by config.dbCloseWait.
+                if (timer.dbCloseTimer) {
+                    clearTimeout(timer.dbCloseTimer);
                 }
-            
+                timer.dbCloseTimer = setTimeout(function() {
+                    db.closeConnection();
+                }, config.dbCloseWait);
+
             // If the request method is GET, this was a follow-up request for 
             // a full page. Log this in the errors log.
             } else if (method === 'GET') {
