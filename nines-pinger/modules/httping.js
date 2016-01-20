@@ -51,6 +51,9 @@ exports.pingUrls = function(arrUrls) {
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
             var req = http.request(options, callback);
+            req.on('error', function(err) {
+                console.log('Likely an incorrectly formed domain', err);
+            });
             req.end();
         } else if (arrUrls[i].protocol === 'https') {
             // https capability coming in the future
@@ -131,6 +134,8 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                 // more elegant solution for closing the MongoDB connection
                 // without stepping on any possible pending log writes. I
                 // think this is pretty safe.
+                console.log('iteration:', iteration);
+                console.log('arrUrlsLength - 1:', arrUrlsLength - 1);
                 if (iteration === arrUrlsLength - 1) {
                     setTimeout(function() {
                         db.closeConnection()
