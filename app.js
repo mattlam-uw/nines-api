@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var config = require('./modules/config-convey'); // Config data
 var errors = require('./routes/errors'); // Methods for processing calls to /errors
-var heads = require('./routes/heads'); // Methods for processing calls to /events
+var heads = require('./routes/heads'); // Methods for processing calls to /heads
 var urls = require('./routes/urls'); // Methods for processing calls to /urls
 var urlgroups = require('./routes/urlgroups'); // Methods for processing calls to /urlgroups
 var urlgroupurls = require('./routes/urlgroupurls'); // Methods for processing calls to /urlgroupurls

@@ -10,7 +10,7 @@
  *
  */
 
-// Require local modules for interacting with Errors and Events models
+// Require local modules for interacting with models
 var db = require('../modules/database.js');
 
 // Require local modules

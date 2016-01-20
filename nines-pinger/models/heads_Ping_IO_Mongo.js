@@ -1,27 +1,27 @@
 /**
  * IO Interface for MongoDB collection defined and supported by Mongoose Schema
- * outlined in Eveents_Mongo.js model
+ * outlined in Heads_Mongo.js model
  **/
 
 // Dependencies:
 var mongoose = require('mongoose');
-var Events = require('../../models/Heads_Mongo');
+var Heads = require('../../models/Heads_Mongo');
 
 /**
- * Events model methods
+ * Heads model methods
  */
 
-// Create new MongoDB doc in Events collection for a general event (e.g. URL ping)
-exports.writeEventEntry = function(eventDateTime, urlID, statusCode) {
+// Create new MongoDB doc in Heads collection for a response to HEAD request
+exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
     // Create a new general log entry from data passed to this function
-    var newEventEntry = Events({
-        datetime: eventDateTime,
+    var newHeadsEntry = Heads({
+        datetime: reqDateTime,
         url_id: urlID,
         status_code: statusCode
     });
 
-    // Save the new general log entry to MongoDB
-    newEventEntry.save(function(err) {
+    // Save the new Heads entry to MongoDB
+    newHeadsEntry.save(function(err) {
         if (err) console.log(err);
         console.log('HEAD request logged');
     });

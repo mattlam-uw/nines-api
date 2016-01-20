@@ -5,7 +5,7 @@
  *
  * The initial request to a URL is always just a request for the response
  * headers (method = 'HEAD'). If the response for any request results in a
- * status code equal to or exceding the threshold set in config.js, then a 
+ * status code equal to or exceeding the threshold set in config.js, then a
  * full-page (method = 'GET') follow-up request is sent to the URL in order 
  * to get any valuable error message information that might be included in the 
  * page response.
@@ -49,10 +49,10 @@ exports.pingUrls = function(arrUrls) {
             reqDateTime, i, arrUrls.length);
 
         // Send the request as http or https depending on protocol specified
-        if (arrUrls[i].protocol == 'http') {
+        if (arrUrls[i].protocol === 'http') {
             var req = http.request(options, callback);
             req.end();
-        } else if (arrUrls[i].protocol == 'https') {
+        } else if (arrUrls[i].protocol === 'https') {
             // https capability coming in the future
         } else {
             // some protocol other than http and https was specified
@@ -122,7 +122,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                                      + 'response code: ' + res.statusCode;
                 */
 
-                headIO.writeEventEntry(reqDateTime, urlID, res.statusCode);
+                headIO.writeHeadsEntry(reqDateTime, urlID, res.statusCode);
 
                 // Close the database connection.
                 // First check to see if this is the last of the request batch.
@@ -131,7 +131,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                 // more elegant solution for closing the MongoDB connection
                 // without stepping on any possible pending log writes. I
                 // think this is pretty safe.
-                if (iteration == arrUrlsLength - 1) {
+                if (iteration === arrUrlsLength - 1) {
                     setTimeout(function() {
                         db.closeConnection()
                     }, config.dbCloseWait);
@@ -139,7 +139,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
             
             // If the request method is GET, this was a follow-up request for 
             // a full page. Log this in the errors log.
-            } else if (method == 'GET') {
+            } else if (method === 'GET') {
                 // Get the current date for logging
                 var reqTime = new Date();
                 // Combine protocol host and path into a URL for logging
