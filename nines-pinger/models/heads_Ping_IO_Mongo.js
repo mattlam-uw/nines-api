@@ -12,6 +12,7 @@ var Heads = require('../../models/Heads_Mongo');
  */
 
 // Create new MongoDB doc in Heads collection for a response to HEAD request
+// Create new MongoDB doc in Heads collection for a response to HEAD request
 exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
     // Create a new general log entry from data passed to this function
     var newHeadsEntry = Heads({
@@ -21,8 +22,29 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
     });
 
     // Save the new Heads entry to MongoDB
-    newHeadsEntry.save(function(err) {
+    newHeadsEntry.save(function(err, heads) {
         if (err) console.log(err);
         console.log('HEAD request logged');
+        Heads.find(function(err, heads) {
+            if (err) console.log(err);
+            if (heads) {
+                var results = [];
+                var errTotal = 0;
+                var resTotal = 0;
+                var availabilityRating = 0;
+                for (var i = 0; i < heads.length; i++) {
+                    if (heads[i].url_id == urlID) {
+                        if (heads[i].status_code >= 400) {
+                            errTotal += 1;
+                        }
+                        resTotal += 1;
+                    }
+                }
+                availabilityRating = (1 - errTotal / resTotal) * 100;
+                console.log('Availability Rating for'
+                    + urlID + ": ");
+                console.log(availabilityRating);
+            }
+        });
     });
 };
