@@ -7,6 +7,7 @@
 var mongoose = require('mongoose');
 var Heads = require('../../models/Heads_Mongo');
 var Urls = require('../../models/Urls_Mongo');
+var UrlGroups = require('../../models/UrlGroups_Mongo');
 
 // Global variables that should be converted to constants set by config
 var errorThreshold = 400;
@@ -26,13 +27,14 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
         status_code: statusCode
     });
 
-    // Save the new Heads entry to MongoDB and update the Urls model to
-    // appropriately increment the response and error totals for this URL
+    // Save the new Heads entry to MongoDB and update the Urls and UrlGroups
+    // models to increment the response and error totals accordingly for this
+    // URL's response
     newHeadsEntry.save(function(err, head) {
         if (err) console.log(err);
         console.log('HEAD request logged');
 
-        // Get the Urls model doc for this URL
+        // Update the response and error totals on Urls model doc for this URL
         Urls.findOne(
             { '_id': head.url_id },
             function(err, url) {
@@ -48,13 +50,33 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
 
                 // Increment the response and error totals for URL
                 Urls.update(
-                    { '_id': head.url_id },
+                    { '_id': url._id },
                     {
                         'response_total': url.response_total + 1,
                         'error_total': url.error_total + errIncrement
                     },
                     function(err, numAffected) {
                         if (err) console.log(err);
+                    }
+                );
+
+                // Update the response and error totals on UrlGroups model doc
+                // for the URL Group that this URL belongs to
+                UrlGroups.findOne(
+                    { '_id': url.urlgroup_id },
+                    function(err, urlgroup) {
+                        if (err) console.log(err);
+
+                        UrlGroups.update(
+                            { '_id': urlgroup._id },
+                            {
+                                'response_total': urlgroup.response_total + 1,
+                                'error_total': urlgroup.error_total + errIncrement
+                            },
+                            function(err, numAffected) {
+                                if (err) console.log(err);
+                            }
+                        );
                     }
                 );
             }
