@@ -7,6 +7,9 @@
 var mongoose = require('mongoose');
 var Heads = require('../../models/Heads_Mongo');
 
+// Global variables that should be converted to constants
+var errorThreshold = 400;
+
 /**
  * Heads model methods
  */
@@ -34,16 +37,12 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
                 var availabilityRating = 0;
                 for (var i = 0; i < heads.length; i++) {
                     if (heads[i].url_id == urlID) {
-                        if (heads[i].status_code >= 400) {
+                        if (heads[i].status_code >= errorThreshold) {
                             errTotal += 1;
                         }
                         resTotal += 1;
                     }
                 }
-                availabilityRating = (1 - errTotal / resTotal) * 100;
-                console.log('Availability Rating for'
-                    + urlID + ": ");
-                console.log(availabilityRating);
             }
         });
     });
