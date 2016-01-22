@@ -12,7 +12,9 @@ var UrlSchema = new mongoose.Schema({
     name: String,
     host: String,
     path: String,
-    protocol: String
+    protocol: String,
+    response_total: Number,
+    error_total: Number
 });
 
 // Export mongoose 'Urls' model, which will create/use a collection called

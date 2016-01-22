@@ -6,8 +6,9 @@
 // Dependencies:
 var mongoose = require('mongoose');
 var Heads = require('../../models/Heads_Mongo');
+var Urls = require('../../models/Urls_Mongo');
 
-// Global variables that should be converted to constants
+// Global variables that should be converted to constants set by config
 var errorThreshold = 400;
 
 /**
@@ -28,13 +29,18 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
     newHeadsEntry.save(function(err, heads) {
         if (err) console.log(err);
         console.log('HEAD request logged');
+        Urls.find({ '_id': heads.url_id }, 'response_total error_total', function(err, urls) {
+            if (err) console.log(err);
+            console.log('response total:', urls.response_total);
+            console.log('error total:', urls.error_total);
+        });
+        /*
         Heads.find(function(err, heads) {
             if (err) console.log(err);
             if (heads) {
                 var results = [];
                 var errTotal = 0;
                 var resTotal = 0;
-                var availabilityRating = 0;
                 for (var i = 0; i < heads.length; i++) {
                     if (heads[i].url_id == urlID) {
                         if (heads[i].status_code >= errorThreshold) {
@@ -45,5 +51,6 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
                 }
             }
         });
+        */
     });
 };
