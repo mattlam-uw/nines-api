@@ -10,8 +10,7 @@ var mongoose = require('mongoose');
 // Define Mongoose Schema
 var UrlGroupSchema = new mongoose.Schema({
     name: String,
-    response_total: Number,
-    error_total: Number
+    responses: Object
 });
 
 // Export mongoose 'UrlGroups' model, which will create/use a collection called

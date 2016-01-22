@@ -40,21 +40,17 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
             function(err, url) {
                 if (err) console.log(err);
 
-                // If the status code for the HEAD request response was equal
-                // to or greater than the error threshold, then the error
-                // total for this URL will need to be incremented by 1
-                var errIncrement = 0;
-                if (head.status_code >= errorThreshold) {
-                    errIncrement = 1;
+                // Increment the appropriate status code response total for URL
+                var newResponses = url.responses;
+                if (!newResponses[head.status_code]) {
+                    newResponses[head.status_code] = 1;
+                } else {
+                    newResponses[head.status_code] += 1;
                 }
 
-                // Increment the response and error totals for URL
                 Urls.update(
                     { '_id': url._id },
-                    {
-                        'response_total': url.response_total + 1,
-                        'error_total': url.error_total + errIncrement
-                    },
+                    { 'responses': newResponses },
                     function(err, numAffected) {
                         if (err) console.log(err);
                     }
@@ -67,12 +63,17 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
                     function(err, urlgroup) {
                         if (err) console.log(err);
 
+                        // Increment the appropriate status code response total for URL
+                        var newResponses = urlgroup.responses;
+                        if (!newResponses[head.status_code]) {
+                            newResponses[head.status_code] = 1;
+                        } else {
+                            newResponses[head.status_code] += 1;
+                        }
+
                         UrlGroups.update(
                             { '_id': urlgroup._id },
-                            {
-                                'response_total': urlgroup.response_total + 1,
-                                'error_total': urlgroup.error_total + errIncrement
-                            },
+                            { 'responses': newResponses },
                             function(err, numAffected) {
                                 if (err) console.log(err);
                             }
