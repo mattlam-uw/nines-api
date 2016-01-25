@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Heads = require('../../models/Heads_Mongo');
 var Urls = require('../../models/Urls_Mongo');
 var UrlGroups = require('../../models/UrlGroups_Mongo');
+var UrlIO = require('./urls_Ping_IO_Mongo');
 
 // Global variables that should be converted to constants set by config
 var errorThreshold = 400;
@@ -35,52 +36,6 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
         console.log('HEAD request logged');
 
         // Update the response and error totals on Urls model doc for this URL
-        Urls.findOne(
-            { '_id': head.url_id },
-            function(err, url) {
-                if (err) console.log(err);
-
-                // Increment the appropriate status code response total for URL
-                var newResponses = url.responses;
-                if (!newResponses[head.status_code]) {
-                    newResponses[head.status_code] = 1;
-                } else {
-                    newResponses[head.status_code] += 1;
-                }
-
-                Urls.update(
-                    { '_id': url._id },
-                    { 'responses': newResponses },
-                    function(err, numAffected) {
-                        if (err) console.log(err);
-                    }
-                );
-
-                // Update the response and error totals on UrlGroups model doc
-                // for the URL Group that this URL belongs to
-                UrlGroups.findOne(
-                    { '_id': url.urlgroup_id },
-                    function(err, urlgroup) {
-                        if (err) console.log(err);
-
-                        // Increment the appropriate status code response total for URL
-                        var newResponses = urlgroup.responses;
-                        if (!newResponses[head.status_code]) {
-                            newResponses[head.status_code] = 1;
-                        } else {
-                            newResponses[head.status_code] += 1;
-                        }
-
-                        UrlGroups.update(
-                            { '_id': urlgroup._id },
-                            { 'responses': newResponses },
-                            function(err, numAffected) {
-                                if (err) console.log(err);
-                            }
-                        );
-                    }
-                );
-            }
-        );
+        UrlIO.updateUrlResponses(head.url_id, head.status_code);
     });
 };
