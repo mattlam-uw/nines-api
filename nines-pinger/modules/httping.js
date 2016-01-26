@@ -19,6 +19,7 @@ var config = require('../../modules/config-convey'); // Config data from config.
 var db = require('../../modules/database.js'); // Open and close DB connections
 var errorIO = require('../models/errors_Ping_IO_Mongo.js'); // Errors model IO ops
 var headIO = require('../models/heads_Ping_IO_Mongo.js'); // Heads model IO ops
+var UrlGroupsIO = require('../models/urlgroups_Ping_IO_Mongo.js'); // URL Groups model IO ops
 
 /* ----------------------------------------------------------------------------
    Functions exposed to client code
@@ -34,16 +35,15 @@ exports.pingUrls = function(arrUrls) {
         return;
     }
 
-    // The database connection will be closed following a timed delay after the
-    // last ping request has been sent. This Object will be used to store the
-    // timer controlling the delay. I am using and object because it will be
-    // passed by reference. Thus, each callback will not have its own delay
-    // timer instance. The same instance will be used by all callbacks.
-    var dbCloseTimer = {};
+    // Counter to track logging calls for ping responses. This is used in the
+    // callback generated below in order to determine when the last ping
+    // response is being logged.
+    var pings = { count: 0 };
 
-    // URL data has been received, so iterate through the array of objects 
+    // URL data has been received, so iterate through the array of objects
     // containing the URLs and send requests for each URL
     for (var i = 0; i < arrUrls.length; i++) {
+
         var reqMethod = 'HEAD'; // Method of http request to be sent
         var reqDateTime = new Date(); // Timestamp for request
 
@@ -52,8 +52,8 @@ exports.pingUrls = function(arrUrls) {
 
         // Generate request callback
         var callback = generateCallback(arrUrls[i].name, arrUrls[i].host,
-            arrUrls[i].path, arrUrls[i].protocol, arrUrls[i]._id, reqMethod,
-            reqDateTime, dbCloseTimer);
+            arrUrls[i].path, arrUrls[i].protocol, arrUrls[i]._id, pings,
+            arrUrls.length, reqMethod, reqDateTime);
 
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
@@ -90,7 +90,7 @@ function generateOptions(host, path, method) {
 
 // Function to generate a callback to be used for http.request
 function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
-                          method, reqDateTime, timer) {
+                          pings, urlCount, method, reqDateTime) {
 
     return function(res) {
 
@@ -117,36 +117,28 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                     // Set up for the follow-up request
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
                     var fullReqCallback = generateCallback(urlName, urlHost,
-                            urlPath, urlProtocol, urlID, 'GET', reqDateTime,
-                            timer);
+                            urlPath, urlProtocol, urlID, pings, urlCount, 'GET',
+                            reqDateTime);
                     // Execute the follow-up request
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
 
-                // Add log of this request to the events Log
-                /*
-                var eventType = urlProtocol + ' request';
-                var eventDescription = 'name: ' + urlName + '\n'
-                                     + 'host: ' + urlHost + '\n'
-                                     + 'path: ' + urlPath + '\n'
-                                     + 'response code: ' + res.statusCode;
-                */
-
+                // Log the ping request to the Heads model (this will also log
+                // it to the Urls model
                 headIO.writeHeadsEntry(reqDateTime, urlID, res.statusCode);
 
-                // Close the database connection. Because there may be one or
-                // more outstanding responses to receive and log, we want to
-                // give those responses a chance to be received. We'll set a
-                // timer such that the db connection will be closed when the
-                // timer expires. This timer is set with the first response,
-                // and then cancelled and set anew with each subsequent
-                // response. The timer delay time is set by config.dbCloseWait.
-                if (timer.dbCloseTimer) {
-                    clearTimeout(timer.dbCloseTimer);
+                // Increment the counter tracking number of pings that have
+                // been logged
+                pings.count += 1;
+                // If this is the last ping to log, then kick off the URL Group
+                // response data query and update process after a timed delay.
+                // The delay is needed in order to ensure that all the async
+                // db calls from the ping response logging have completed.
+                if (pings.count === urlCount) {
+                    setTimeout(function() {
+                        UrlGroupsIO.updateAllUrlGroupResponses();
+                    }, config.urlGroupQueryWait);
                 }
-                timer.dbCloseTimer = setTimeout(function() {
-                    db.closeConnection();
-                }, config.dbCloseWait);
 
             // If the request method is GET, this was a follow-up request for 
             // a full page. Log this in the errors log.

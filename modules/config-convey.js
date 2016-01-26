@@ -26,8 +26,8 @@ exports.logFileDir = path.join(__dirname, '..', config.Logs_Dir_Path);
 // Path to urls.json file containing URL data
 exports.urlsFilePath = path.join(__dirname, '..', config.URLs_File_Path);
 
-// Number of seconds to wait after last URL ping before closing DB connection
-exports.dbCloseWait = config.DB_Close_Wait * 1000;
+// Number of seconds to wait after last of Ping response data is recorded in DB
+exports.urlGroupQueryWait = config.URL_Group_Query_Wait * 1000;
 
 // HTTP Status Code threshold for sending a follow-up full page request
 exports.statusCodeThreshold = config.Status_Code_Threshold;

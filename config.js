@@ -23,9 +23,13 @@ var config = {
     // below, then a follow-up request will be made to get full page data.
     // (recommend: 400)
     "Status_Code_Threshold": 400,
-    // Number of seconds to wait after last URL request (ping) and closing
-    // of database connection (recommend: 10)
-    "DB_Close_Wait": 5
+    // Number of seconds to wait from time the last URL ping responses are
+    // recorded to the time that the URL Group response totals are queried.
+    // Recommend at least 2 seconds, more (like 3, 4, 5, or even 10) is safer
+    // because we want to make sure all the async calls to the database for
+    // recording the URL ping data complete before we start querying the data
+    // to compile URL Group response totals.
+    "URL_Group_Query_Wait": 3
 };
 
 // Stuff that you shouldn't (need to) touch

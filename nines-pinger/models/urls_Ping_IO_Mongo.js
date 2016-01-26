@@ -4,7 +4,6 @@
 
 // Node.js Module Dependencies
 var Urls = require('../../models/Urls_Mongo');
-var UrlGroupIO = require('./urlgroups_Ping_IO_Mongo');
 
 
 // Retrieve all URL data from MongoDB-based Urls model
@@ -15,7 +14,8 @@ exports.getUrls = function(callback) {
     });
 };
 
-// Update the response and error totals on Urls model doc for this URL
+
+// Update the status code response totals on Urls model doc for a given URL
 exports.updateUrlResponses = function(urlId, statusCode) {
     Urls.findOne(
         { '_id': urlId },
@@ -30,6 +30,7 @@ exports.updateUrlResponses = function(urlId, statusCode) {
                 newResponses[statusCode] += 1;
             }
 
+            // Update the URL with the new response totals per status code
             Urls.update(
                 { '_id': url._id },
                 { 'responses': newResponses },
@@ -37,13 +38,40 @@ exports.updateUrlResponses = function(urlId, statusCode) {
                     if (err) console.log(err);
                 }
             );
-
-            // Update the response and error totals on UrlGroups model doc
-            // for the URL Group that this URL belongs to
-            UrlGroupIO.updateUrlGroupResponses(url.urlgroup_id, statusCode);
         }
     );
 };
+
+// Retrieve response totals for all URLs associated with a given URL Group
+exports.getUrlResponses = function(urlGroupId, urlGroupName, callback) {
+    // Get all the url records from Urls model having the given URL Group ID
+    Urls.find(
+        { 'urlgroup_id': urlGroupId },
+        function(err, urls) {
+            if (err) console.log(err);
+
+            // Create a 'responses' object that will be populated with
+            // status-code response totals from all URLs in the URL Group
+            var responses = {};
+            // Iterate through URLs and populate the 'responses' object
+            for (var i = 0; i < urls.length; i++) {
+                for (var j in urls[i].responses) {
+                    // If a response total for the given status code exists,
+                    // then add to it. Use the current response count to initialize
+                    // a new status code property on the 'responses' object
+                    if (!responses[j]) {
+                        responses[j] = urls[i].responses[j];
+                    } else {
+                        responses[j] += urls[i].responses[j];
+                    }
+                }
+            }
+            // Call the callback with the full-populated 'responses' object as
+            // well as some other URL Group info
+            callback(urlGroupId, urlGroupName, responses);
+        }
+    );
+}
 
 
 
