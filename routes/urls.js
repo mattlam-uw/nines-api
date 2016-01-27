@@ -34,9 +34,6 @@ router.delete('/:id', function(req, res, next) {
     Urls.deleteUrl(req, function(data) {
         res.json(data);
     });
-    Heads.deleteUrlHeads(req, function(data) {
-        res.json(data);
-    });
 });
 
 module.exports = router;
