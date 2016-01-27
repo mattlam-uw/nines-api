@@ -27,4 +27,11 @@ router.post('/', function(req, res, next) {
     });
 });
 
+// PUT (update one) url group
+router.put('/:id', function(req, res, next) {
+    UrlGroups.updateUrlGroup(req, function(data) {
+        res.json(data);
+    })
+})
+
 module.exports = router;

@@ -28,3 +28,11 @@ exports.postUrlGroup = function(req, callback) {
         callback(returnVal);
     });
 }
+
+// Put (modify) a URL Group
+exports.updateUrlGroup = function(req, callback) {
+    UrlGroups.findByIdAndUpdate(req.params.id, req.body, function(err, returnVal) {
+        if (err) return next(err);
+        callback(returnVal);
+    })
+}

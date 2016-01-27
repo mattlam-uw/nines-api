@@ -33,6 +33,7 @@ exports.postUrl = function(req, callback) {
 exports.deleteUrl = function(req, callback) {
     Urls.findByIdAndRemove(req.params.id, function(err, returnVal) {
         if (err) return next(err);
+        console.log('returnVal:', returnVal);
         callback(returnVal);
     })
 };

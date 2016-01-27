@@ -33,6 +33,7 @@ router.post('/', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     Urls.deleteUrl(req, function(data) {
         res.json(data);
+        console.log('data:', data);
     });
 });
 
