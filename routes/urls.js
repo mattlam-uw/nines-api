@@ -12,6 +12,7 @@ var router = express.Router();
 
 // Local Module Dependencies
 var Urls = require('../models/urls_API_IO_Mongo.js'); // Urls model IO
+var Heads = require('../models/heads_API_IO_Mongo.js'); // Heads model IO
 
 // GET (retrieve all) url data
 router.get('/', function(req, res, next) {
@@ -25,6 +26,17 @@ router.post('/', function(req, res, next) {
    Urls.postUrl(req, function(data) {
        res.json(data);
    });
+});
+
+// DELETE (remove one) url by id and remove all Heads documents associated with
+// the URL
+router.delete('/:id', function(req, res, next) {
+    Urls.deleteUrl(req, function(data) {
+        res.json(data);
+    });
+    Heads.deleteUrlHeads(req, function(data) {
+        res.json(data);
+    });
 });
 
 module.exports = router;

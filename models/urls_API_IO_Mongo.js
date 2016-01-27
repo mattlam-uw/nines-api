@@ -19,7 +19,7 @@ exports.getUrls = function(callback) {
         if (err) return next(err);
         callback(returnVal);
     });
-}
+};
 
 // Post a new URL
 exports.postUrl = function(req, callback) {
@@ -27,4 +27,12 @@ exports.postUrl = function(req, callback) {
         if (err) return next(err);
         callback(returnVal);
     });
-}
+};
+
+// Delete an existing URL
+exports.deleteUrl = function(req, callback) {
+    Urls.findByIdAndRemove(req.params.id, function(err, returnVal) {
+        if (err) return next(err);
+        callback(returnVal);
+    })
+};

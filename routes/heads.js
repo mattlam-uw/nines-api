@@ -20,6 +20,14 @@ router.get('/', function(req, res, next) {
     });
 });
 
+// DELETE all heads records for URL
+router.delete('/:id', function(req, res, next) {
+   Heads.removeUrlHeads(function(data) {
+       res.json(data);
+       console.log(data);
+   });
+});
+
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // EVERYTHING BELOW MUST BE REFACTORED
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

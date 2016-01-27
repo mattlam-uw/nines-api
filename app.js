@@ -30,9 +30,10 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Allows reading resource located at same origin as client
+// Allows reading resource located at same origin as client (CORS middleware)
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", config.ninesWebHost);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header("Access-Control-Allow-Headers", "Origin, X-Requrested-With, Content-Type, Accept");
     next();
 });
