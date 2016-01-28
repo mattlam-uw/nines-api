@@ -10,7 +10,7 @@ var errors = require('./routes/errors'); // Methods for processing calls to /err
 var heads = require('./routes/heads'); // Methods for processing calls to /heads
 var urls = require('./routes/urls'); // Methods for processing calls to /urls
 var urlgroups = require('./routes/urlgroups'); // Methods for processing calls to /urlgroups
-var urlgroupurls = require('./routes/urlgroupurls'); // Methods for processing calls to /urlgroupurls
+// var urlgroupurls = require('./routes/urlgroupurls'); // Methods for processing calls to /urlgroupurls
 var db = require('./modules/database'); // Provide connection to database
 
 var app = express();
@@ -42,7 +42,7 @@ app.use('/errors', errors);
 app.use('/heads', heads);
 app.use('/urls', urls);
 app.use('/urlgroups', urlgroups);
-app.use('/urlgroupurls', urlgroupurls);
+// app.use('/urlgroupurls', urlgroupurls);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
