@@ -32,6 +32,6 @@ router.put('/:id', function(req, res, next) {
     UrlGroups.updateUrlGroup(req, function(data) {
         res.json(data);
     })
-})
+});
 
 module.exports = router;

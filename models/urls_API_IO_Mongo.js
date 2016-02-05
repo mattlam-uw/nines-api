@@ -29,6 +29,14 @@ exports.postUrl = function(req, callback) {
     });
 };
 
+// Put (modify) a URL
+exports.updateUrl = function(req, callback) {
+    Urls.findByIdAndUpdate(req.params.id, req.body, function(err, returnVal) {
+        if (err) return next(err);
+        callback(returnVal);
+    })
+};
+
 // Delete an existing URL
 exports.deleteUrl = function(req, callback) {
     Urls.findByIdAndRemove(req.params.id, function(err, returnVal) {

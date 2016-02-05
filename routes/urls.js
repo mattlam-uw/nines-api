@@ -28,6 +28,13 @@ router.post('/', function(req, res, next) {
    });
 });
 
+// PUT (update one) url
+router.put('/:id', function(req, res, next) {
+    Urls.updateUrl(req, function(data) {
+        res.json(data);
+    })
+});
+
 // DELETE (remove one) url by id and remove all Heads documents associated with
 // the URL
 router.delete('/:id', function(req, res, next) {

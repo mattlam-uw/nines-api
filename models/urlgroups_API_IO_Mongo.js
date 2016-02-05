@@ -19,7 +19,7 @@ exports.getUrlGroups = function(callback) {
         if (err) return next(err);
         callback(returnVal);
     });
-}
+};
 
 // Post a new URL Group
 exports.postUrlGroup = function(req, callback) {
@@ -27,7 +27,7 @@ exports.postUrlGroup = function(req, callback) {
         if (err) return next(err);
         callback(returnVal);
     });
-}
+};
 
 // Put (modify) a URL Group
 exports.updateUrlGroup = function(req, callback) {
@@ -35,4 +35,4 @@ exports.updateUrlGroup = function(req, callback) {
         if (err) return next(err);
         callback(returnVal);
     })
-}
+};
