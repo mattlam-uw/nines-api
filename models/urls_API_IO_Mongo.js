@@ -21,6 +21,14 @@ exports.getUrls = function(callback) {
     });
 };
 
+// Retrieve all URLs having a given urlgroup_id
+exports.getUrlsByUrlGroup = function(req, callback) {
+    Urls.find({ urlgroup_id: req.params.id }, function(err, returnVal) {
+        if (err) return next(err);
+        callback(returnVal);
+    });
+}
+
 // Post a new URL
 exports.postUrl = function(req, callback) {
     Urls.create(req.body, function(err, returnVal) {
