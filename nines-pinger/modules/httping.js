@@ -58,8 +58,15 @@ exports.pingUrls = function(arrUrls) {
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
             var req = http.request(options, callback);
+            // If there is an error with the request, then (1) log the error,
+            // and (2) wait for the same period specified for waiting after the
+            // last of Ping response data has been recorded and close the DB
+            // connection
             req.on('error', function(err) {
                 console.log('Likely an incorrectly formed domain', err);
+                setTimeout(function() {
+                    db.closeConnection();
+                }, config.urlGroupQueryWait);
             });
             req.end();
         } else if (arrUrls[i].protocol === 'https') {
