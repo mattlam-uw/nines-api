@@ -22,8 +22,15 @@ exports.updateUrlResponses = function(urlId, statusCode) {
         function(err, url) {
             if (err) console.log(err);
 
+            // Create 'newResponses' object to store updated response totals.
+            // If a 'responses' property (object) already exists for the url
+            // then copy this to 'newResponses'
+            var newResponses = {};
+            if (url.responses) {
+                newResponses = url.responses;
+            }
+
             // Increment the appropriate status code response total for URL
-            var newResponses = url.responses;
             if (!newResponses[statusCode]) {
                 newResponses[statusCode] = 1;
             } else {
