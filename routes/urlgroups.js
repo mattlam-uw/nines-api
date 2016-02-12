@@ -34,4 +34,12 @@ router.put('/:id', function(req, res, next) {
     })
 });
 
+// DELETE (remove one) url group by id
+router.delete('/:id', function(req, res, next) {
+    UrlGroups.deleteUrlGroup(req, function(data) {
+        res.json(data);
+        console.log('data:', data);
+    });
+});
+
 module.exports = router;
