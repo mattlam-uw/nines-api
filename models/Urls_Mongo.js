@@ -14,7 +14,9 @@ var UrlSchema = new mongoose.Schema({
     path: String,
     protocol: String,
     urlgroup_id: String,
-    responses: Object
+    responses: Object,
+    view_order: Number,
+    ping_frequency: Number
 });
 
 // Export mongoose 'Urls' model, which will create/use a collection called
