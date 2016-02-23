@@ -8,7 +8,11 @@ var Urls = require('../../models/Urls_Mongo');
 
 // Retrieve all URL data from MongoDB-based Urls model
 exports.getUrls = function(callback) {
-    Urls.find(function(err, returnObj) {
+    var pingFreqs = getValidFreqs();
+
+    Urls.find(
+        { ping_frequency: { $in: pingFreqs }},
+        function(err, returnObj) {
         if(err) console.log(err);
         callback(returnObj);
     });
@@ -78,6 +82,48 @@ exports.getUrlResponses = function(urlGroupId, urlGroupName, callback) {
             callback(urlGroupId, urlGroupName, responses);
         }
     );
+}
+
+function getValidFreqs() {
+    var freqs = [5];
+    var date = new Date();
+    var min = date.getMinutes();
+    var hour = date.getHours();
+
+    // Need to figure out logic
+    
+    /*
+    if (urlPingFreq === 5) {
+        result = true;
+    } else if (urlPingFreq < 60) {
+        var test = urlPingFreq - thisReqMins;
+        if (test >= -1 && test <= 1) {
+            result = true;
+        }
+    } else if (urlPingFreq >= 60) {
+        if (thisReqMins >= 59 || thisReqMins <= 1) {
+            if (urlPingFreq === 60) {
+                result = true;
+            } else if (urlPingFreq === 120) {
+                if (thisReqHours % 2 === 0) {
+                    result = true;
+                }
+            } else if (urlPingFreq === 360) {
+                if (thisReqHours % 6 === 0) {
+                    result = true;
+                }
+            } else if (urlPingFreq === 720) {
+                if (thisReqHours % 12 === 0) {
+                    result = true;
+                }
+            } else if (urlPingFreq === 1440) {
+                if (thisReqHours === 0) {
+                    result = true;
+                }
+            }
+        }
+    }
+    */
 }
 
 
