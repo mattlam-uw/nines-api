@@ -8,7 +8,7 @@ var Urls = require('../../models/Urls_Mongo');
 
 // Retrieve all URL data from MongoDB-based Urls model
 exports.getUrls = function(callback) {
-    var pingFreqs = getValidFreqs();
+    var pingFreqs = getValidFrequencies();
 
     Urls.find(
         { ping_frequency: { $in: pingFreqs }},
@@ -84,49 +84,100 @@ exports.getUrlResponses = function(urlGroupId, urlGroupName, callback) {
     );
 }
 
-function getValidFreqs() {
-    var freqs = [5];
+/**
+ * Returns an array of ping frequency values that have been determined to be
+ * valid given the current time retrieved from this server.
+ *
+ * This assumes valid frequency values be confined to the following integers,
+ * which represent the number of minutes that should elapse between pings:
+ *
+ * 5, 10, 15, 30, 60, 120 (2 hours), 360 (6 hours), 720 (1/2 day), 1440 (1 day)
+ *
+ * @returns {number[]}
+ */
+function getValidFrequencies() {
+
+    // Get current server time for determining appropriate frequency values
     var date = new Date();
     var min = date.getMinutes();
     var hour = date.getHours();
 
-    // Need to figure out logic
-    
+    console.log('Current Date:', date);
+    console.log('Current Mins:', min);
+    console.log('Current Hour:', hour);
+
+    // The value of 5 is valid in all cases, so include in return variable
+    var frequencies = [5];
+    console.log('Assigning freqs for :5, :25, :35, :55', frequencies);
+
     /*
-    if (urlPingFreq === 5) {
-        result = true;
-    } else if (urlPingFreq < 60) {
-        var test = urlPingFreq - thisReqMins;
-        if (test >= -1 && test <= 1) {
-            result = true;
+    For the following target minute values, check the current server time
+    against a range and assign the appropriate frequency values
+    */
+
+    // :05 -- no frequency values to add
+    // :10
+    if (min > 7  && min < 14) {
+        frequencies.push(10);
+        console.log('Assigning freqs for :10', frequencies);
+    // :15
+    } else if (min > 13 && min < 18) {
+        frequencies.push(15);
+        console.log('Assigning freqs for :15', frequencies);
+
+    // :20
+    } else if (min > 17 && min < 24) {
+        frequencies.push(10);
+        console.log('Assigning freqs for :20', frequencies);
+
+    // :25 -- no frequency values to add
+    // :30
+    } else if (min > 27 && min < 34) {
+        frequencies.push.apply(frequencies, [10, 15, 30]);
+        console.log('Assigning freqs for :30', frequencies);
+
+    // :35 -- no frequency values to add
+    // :40
+    } else if (min > 37 && min < 44) {
+        frequencies.push(10);
+        console.log('Assigning freqs for :40', frequencies);
+
+    // :45
+    } else if (min > 43 && min < 48) {
+        frequencies.push(15);
+        console.log('Assigning freqs for :45', frequencies);
+
+    // :50
+    } else if (min > 47 && min < 54) {
+        frequencies.push(10);
+        console.log('Assigning freqs for :50', frequencies);
+
+    // :55 -- no frequency values to add
+    // :00 -- check additionally for hour frequencies
+    } else if (min > 57 && min < 4 ) {
+        frequencies.push.apply(frequencies, [10, 15, 30, 60]);
+        console.log('Assigning freqs for :00', frequencies);
+
+        /*
+         For the following target hour values, test the current server time to
+         assign appropriate frequency values
+         */
+        if (hour % 2 === 0) {
+            frequencies.push(120);
+            console.log('Assigning freqs for 2 hours', frequencies);
         }
-    } else if (urlPingFreq >= 60) {
-        if (thisReqMins >= 59 || thisReqMins <= 1) {
-            if (urlPingFreq === 60) {
-                result = true;
-            } else if (urlPingFreq === 120) {
-                if (thisReqHours % 2 === 0) {
-                    result = true;
-                }
-            } else if (urlPingFreq === 360) {
-                if (thisReqHours % 6 === 0) {
-                    result = true;
-                }
-            } else if (urlPingFreq === 720) {
-                if (thisReqHours % 12 === 0) {
-                    result = true;
-                }
-            } else if (urlPingFreq === 1440) {
-                if (thisReqHours === 0) {
-                    result = true;
-                }
-            }
+        if (hour % 6 === 0) {
+            frequencies.push(360);
+            console.log('Assigning freqs for 6 hours', frequencies);
+        }
+        if (hour % 12 === 0) {
+            frequencies.push(720);
+            console.log('Assigning freqs for 12 hours', frequencies);
+        }
+        if (hour === 0) {
+            frequencies.push(1440);
+            console.log('Assigning freqs for 1 day', frequencies);
         }
     }
-    */
+    return frequencies;
 }
-
-
-
-
-	

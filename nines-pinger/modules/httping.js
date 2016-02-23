@@ -47,16 +47,6 @@ exports.pingUrls = function(arrUrls) {
         var reqMethod = 'HEAD'; // Method of http request to be sent
         var reqDateTime = new Date(); // Timestamp for request
 
-        /*
-         * Only ping the URL if it's ping_frequency specifies it should be
-         * pinged for this round
-
-        if (checkPingThisTime(arrUrls[i].ping_frequency, reqDateTime)) {
-
-
-        }
-        */
-
         // Generate request options
         var options = generateOptions(arrUrls[i].host, arrUrls[i].path, reqMethod);
 
@@ -170,47 +160,4 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
             }
         });
     };
-}
-
-function checkPingThisTime(urlPingFreq, thisReqDateTime) {
-
-    var thisReqMins = thisReqDateTime.getMinutes();
-    var thisReqHours = thisReqDateTime.getHours();
-    var result = false;
-    console.log('url ping frequency:', urlPingFreq);
-    console.log('This Request Time - Minutes:', thisReqMins);
-    console.log('This Request Time - Hours:', thisReqHours);
-
-    if (urlPingFreq === 5) {
-        result = true;
-    } else if (urlPingFreq < 60) {
-        var test = urlPingFreq - thisReqMins;
-        if (test >= -1 && test <= 1) {
-            result = true;
-        }
-    } else if (urlPingFreq >= 60) {
-        if (thisReqMins >= 59 || thisReqMins <= 1) {
-            if (urlPingFreq === 60) {
-                result = true;
-            } else if (urlPingFreq === 120) {
-                if (thisReqHours % 2 === 0) {
-                    result = true;
-                }
-            } else if (urlPingFreq === 360) {
-                if (thisReqHours % 6 === 0) {
-                    result = true;
-                }
-            } else if (urlPingFreq === 720) {
-                if (thisReqHours % 12 === 0) {
-                    result = true;
-                }
-            } else if (urlPingFreq === 1440) {
-                if (thisReqHours === 0) {
-                    result = true;
-                }
-            }
-        }
-    }
-    console.log('Result:', result);
-    return result;
 }
