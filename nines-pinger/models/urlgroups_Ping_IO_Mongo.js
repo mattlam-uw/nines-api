@@ -7,10 +7,14 @@ var UrlIO = require('./urls_Ping_IO_Mongo');
 var db = require('../../modules/database.js'); // Open and close DB connections
 
 // Update all responses for a given URL Group
-function updateUrlGroupResponses(urlGroupId, groupCount, groupsCount, responses) {
+function updateUrlGroupResponses(urlGroupId, groupCount, groupsCount,
+                                 responses, requestDateTime) {
     UrlGroups.update(
         { '_id': urlGroupId },
-        { 'responses': responses },
+        {
+            'responses': responses,
+            'last_ping': requestDateTime
+        },
         function(err, numAffected) {
             if (err) console.log(err);
             // Increment the counter tracking the number of URL Groups for which
@@ -35,7 +39,7 @@ function getUrlGroups(callback) {
 
 // For all URL Groups, query and record response totals from all URLs that
 // belong to the group
-exports.updateAllUrlGroupResponses = function() {
+exports.updateAllUrlGroupResponses = function(requestDateTime) {
     // Get all groups
     getUrlGroups(function(urlGroups) {
         // Only do anything if there is at least one URL Group
@@ -54,7 +58,7 @@ exports.updateAllUrlGroupResponses = function() {
                     // And in the callback, write the newly tallied responses
                     // to the response totals for this URL Group
                     updateUrlGroupResponses(urlGroupId, groupCount,
-                        urlGroups.length, responses);
+                        urlGroups.length, responses, requestDateTime);
                 });
             }
         }

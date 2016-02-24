@@ -143,7 +143,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                 // db calls from the ping response logging have completed.
                 if (pings.count === urlCount) {
                     setTimeout(function() {
-                        UrlGroupsIO.updateAllUrlGroupResponses();
+                        UrlGroupsIO.updateAllUrlGroupResponses(reqDateTime);
                     }, config.urlGroupQueryWait);
                 }
 
