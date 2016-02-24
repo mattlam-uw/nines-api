@@ -12,7 +12,8 @@ var UrlGroupSchema = new mongoose.Schema({
     name: String,
     responses: Object,
     view_order: Number,
-    ping_frequency: Number
+    ping_frequency: Number,
+    last_ping: Date
 });
 
 // Export mongoose 'UrlGroups' model, which will create/use a collection called
