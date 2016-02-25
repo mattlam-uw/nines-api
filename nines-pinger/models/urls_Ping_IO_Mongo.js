@@ -21,6 +21,7 @@ exports.getUrls = function(callback) {
                 urlGroupIds.push(urlGroups[i]._id);
             }
 
+            // Ping URLs associated with URL Groups found
             Urls.find(
                 { urlgroup_id: { $in: urlGroupIds }},
                 function(err, returnObj) {
