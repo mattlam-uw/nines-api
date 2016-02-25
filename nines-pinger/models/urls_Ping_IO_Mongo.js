@@ -26,7 +26,7 @@ exports.getUrls = function(callback) {
                 { urlgroup_id: { $in: urlGroupIds }},
                 function(err, returnObj) {
                     if (err) console.log(err);
-                    callback(returnObj);
+                    callback(returnObj, urlGroupIds);
                 }
             );
         }

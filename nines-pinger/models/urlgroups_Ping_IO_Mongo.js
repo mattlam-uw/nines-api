@@ -39,7 +39,7 @@ function getUrlGroups(callback) {
 
 // For all URL Groups, query and record response totals from all URLs that
 // belong to the group
-exports.updateAllUrlGroupResponses = function(requestDateTime) {
+exports.updateAllUrlGroupResponses = function(urlGroupIds, requestDateTime) {
     // Get all groups
     getUrlGroups(function(urlGroups) {
         // Only do anything if there is at least one URL Group
@@ -53,13 +53,16 @@ exports.updateAllUrlGroupResponses = function(requestDateTime) {
             // response totals
             for (var i = 0; i < urlGroups.length; i++) {
                 // Query Responses for a specific URL Group
-                UrlIO.getUrlResponses(urlGroups[i]._id, urlGroups[i].name,
-                    function(urlGroupId, urlGroupName, responses) {
-                    // And in the callback, write the newly tallied responses
-                    // to the response totals for this URL Group
-                    updateUrlGroupResponses(urlGroupId, groupCount,
-                        urlGroups.length, responses, requestDateTime);
-                });
+                if (urlGroupIds.indexOf(urlGroups[i]._id) > -1) {
+                    UrlIO.getUrlResponses(urlGroups[i]._id, urlGroups[i].name,
+                        function(urlGroupId, urlGroupName, responses) {
+                            // And in the callback, write the newly tallied responses
+                            // to the response totals for this URL Group
+                            updateUrlGroupResponses(urlGroupId, groupCount,
+                                (urlGroupIds.length - 1), responses, requestDateTime);
+                        }
+                    );
+                }
             }
         }
     });

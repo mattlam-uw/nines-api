@@ -26,7 +26,7 @@ var UrlGroupsIO = require('../models/urlgroups_Ping_IO_Mongo.js'); // URL Groups
    ------------------------------------------------------------------------- */
 
 // Function to run through and ping all defined URLs
-exports.pingUrls = function(arrUrls) {
+exports.pingUrls = function(arrUrls, arrUrlGroupIds) {
     // Check for URL data passed to function. If the array is empty, then close 
     // the database connection end return out of this function
     if (arrUrls[0] === undefined) {
@@ -53,7 +53,7 @@ exports.pingUrls = function(arrUrls) {
         // Generate request callback
         var callback = generateCallback(arrUrls[i].name, arrUrls[i].host,
             arrUrls[i].path, arrUrls[i].protocol, arrUrls[i]._id, pings,
-            arrUrls.length, reqMethod, reqDateTime);
+            arrUrls.length, reqMethod, reqDateTime, arrUrlGroupIds);
 
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
@@ -97,7 +97,8 @@ function generateOptions(host, path, method) {
 
 // Function to generate a callback to be used for http.request
 function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
-                          pings, urlCount, method, reqDateTime) {
+                          pings, urlCount, method, reqDateTime,
+                          urlGroupIds) {
 
     return function(res) {
 
@@ -125,7 +126,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
                     var fullReqCallback = generateCallback(urlName, urlHost,
                             urlPath, urlProtocol, urlID, pings, urlCount, 'GET',
-                            reqDateTime);
+                            reqDateTime, urlGroupIds);
                     // Execute the follow-up request
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
@@ -143,7 +144,7 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                 // db calls from the ping response logging have completed.
                 if (pings.count === urlCount) {
                     setTimeout(function() {
-                        UrlGroupsIO.updateAllUrlGroupResponses(reqDateTime);
+                        UrlGroupsIO.updateAllUrlGroupResponses(urlGroupIds, reqDateTime);
                     }, config.urlGroupQueryWait);
                 }
 

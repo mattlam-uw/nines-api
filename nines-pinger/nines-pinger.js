@@ -26,9 +26,9 @@ db.openConnection();
  * to kick off the requests from within the callback in order to ensure that
  * the async calls to retrieve URL data from the model have completed.
  **/
-var cbGetUrlData = function(urlData) {
+var cbGetUrlData = function(urlData, urlGroupIds) {
     // Kick off a set of HTTP requests
-    httping.pingUrls(urlData);
+    httping.pingUrls(urlData, urlGroupIds);
 };
 
 // Call getUrls() with the above callback in order to get the URLs and kick
