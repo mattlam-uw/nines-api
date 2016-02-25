@@ -4,18 +4,32 @@
 
 // Node.js Module Dependencies
 var Urls = require('../../models/Urls_Mongo');
+var UrlGroups = require('../../models/UrlGroups_Mongo');
 
 
 // Retrieve all URL data from MongoDB-based Urls model
 exports.getUrls = function(callback) {
     var pingFreqs = getValidFrequencies();
 
-    Urls.find(
+    // Determine URL Groups to ping
+    UrlGroups.find(
         { ping_frequency: { $in: pingFreqs }},
-        function(err, returnObj) {
-        if(err) console.log(err);
-        callback(returnObj);
-    });
+        function(err, urlGroups) {
+            if(err) console.log(err);
+            var urlGroupIds = [];
+            for (var i = 0; i < urlGroups.length; i++) {
+                urlGroupIds.push(urlGroups[i]._id);
+            }
+
+            Urls.find(
+                { urlgroup_id: { $in: urlGroupIds }},
+                function(err, returnObj) {
+                    if (err) console.log(err);
+                    callback(returnObj);
+                }
+            );
+        }
+    );
 };
 
 
