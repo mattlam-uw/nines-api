@@ -52,9 +52,8 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
         var options = generateOptions(arrUrls[i].host, arrUrls[i].path, reqMethod);
 
         // Generate request callback
-        var callback = generateCallback(arrUrls[i].name, arrUrls[i].host,
-            arrUrls[i].path, arrUrls[i].protocol, arrUrls[i]._id, pings,
-            arrUrls.length, reqMethod, reqDateTime, arrPingUrlGroups);
+        var callback = generateCallback(arrUrls[i], arrUrls.length, pings, reqMethod, reqDateTime,
+                                        arrPingUrlGroups);
 
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
@@ -97,9 +96,14 @@ function generateOptions(host, path, method) {
 }
 
 // Function to generate a callback to be used for http.request
-function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
-                          pings, urlCount, method, reqDateTime,
+function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
                           pingUrlGroups) {
+
+    var urlName = pingUrl.name;
+    var urlHost = pingUrl.host;
+    var urlPath = pingUrl.path;
+    var urlProtocol = pingUrl.protocol;
+    var urlID = pingUrl._id;
 
     return function(res) {
 
@@ -125,9 +129,8 @@ function generateCallback(urlName, urlHost, urlPath, urlProtocol, urlID,
                 if (res.statusCode >= config.statusCodeThreshold) {
                     // Set up for the follow-up request
                     var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
-                    var fullReqCallback = generateCallback(urlName, urlHost,
-                            urlPath, urlProtocol, urlID, pings, urlCount, 'GET',
-                            reqDateTime, pingUrlGroups);
+                    var fullReqCallback = generateCallback(pingUrl, urlCount, pings,
+                        'GET', reqDateTime, pingUrlGroups);
                     // Execute the follow-up request
                     http.request(fullReqOptions, fullReqCallback).end();
                 }
