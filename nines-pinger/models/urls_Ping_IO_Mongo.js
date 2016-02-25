@@ -11,22 +11,26 @@ var UrlGroups = require('../../models/UrlGroups_Mongo');
 exports.getUrls = function(callback) {
     var pingFreqs = getValidFrequencies();
 
-    // Determine URL Groups to ping
+    // Determine URL Groups to ping, and populate one array containing only
+    // URL Group IDs and another array containing all URL Group objects
     UrlGroups.find(
         { ping_frequency: { $in: pingFreqs }},
         function(err, urlGroups) {
             if(err) console.log(err);
-            var urlGroupIds = [];
+            var pingUrlGroups = [];
+            var pingUrlGroupIds = [];
             for (var i = 0; i < urlGroups.length; i++) {
-                urlGroupIds.push(urlGroups[i]._id);
+                pingUrlGroups.push(urlGroups[i]);
+                pingUrlGroupIds.push(urlGroups[i]._id);
             }
 
-            // Ping URLs associated with URL Groups found
+            // Get the URLs associated with found URL Groups found, then invoke
+            // the callback, passing the found URLs as well as URL Groups
             Urls.find(
-                { urlgroup_id: { $in: urlGroupIds }},
-                function(err, returnObj) {
+                { urlgroup_id: { $in: pingUrlGroupIds }},
+                function(err, pingUrls) {
                     if (err) console.log(err);
-                    callback(returnObj, urlGroupIds);
+                    callback(pingUrls, pingUrlGroups);
                 }
             );
         }
