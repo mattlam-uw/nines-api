@@ -173,7 +173,7 @@ function getValidFrequencies() {
 
     // :55 -- no frequency values to add
     // :00 -- check additionally for hour frequencies
-    } else if (min > 57 && min < 4 ) {
+    } else if (min > 57 || min < 4 ) {
         frequencies.push.apply(frequencies, [10, 15, 30, 60]);
         console.log('Assigning freqs for :00', frequencies);
 
