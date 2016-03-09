@@ -14,13 +14,16 @@ var Errors = require('../../models/Errors_Mongo');
  */
 
 // Create new MongoDB doc in Errors collection for a request error occurrence
-exports.writeErrorEntry = function(statusCode, resourceName, resourceUrl, requestDateTime, responseData) {
+exports.writeErrorEntry = function(statusCode, resourceName, resourceUrl, 
+    resourceUrlId, resosurceUrlGroupId, requestDateTime, responseData) {
 
     // Create a new error log entry from data passed to this function
     var newErrorEntry = Errors({
         status_code: statusCode,
         resource_name: resourceName,
         resource_url: resourceUrl,
+        resource_url_id: resourceUrlId,
+        resource_urlgroup_id: resourceUrlGroupId,
         response: responseData,
         request_datetime: requestDateTime
     });

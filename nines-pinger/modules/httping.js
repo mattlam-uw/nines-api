@@ -103,7 +103,8 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
     var urlHost = pingUrl.host;
     var urlPath = pingUrl.path;
     var urlProtocol = pingUrl.protocol;
-    var urlID = pingUrl._id;
+    var urlId = pingUrl._id;
+    var urlGroupId = pingUrl.urlgroup_id;
 
     return function(res) {
 
@@ -137,7 +138,7 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
 
                 // Log the ping request to the Heads model (this will also log
                 // it to the Urls model
-                headIO.writeHeadsEntry(reqDateTime, urlID, res.statusCode);
+                headIO.writeHeadsEntry(reqDateTime, urlId, res.statusCode);
 
                 // Increment the counter tracking number of pings that have
                 // been logged
@@ -161,7 +162,8 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
                 var fullUrl = urlProtocol + "://" +  urlHost + urlPath;
 
                 // Log the error response to MongoDB
-                errorIO.writeErrorEntry(res.statusCode, urlName, fullUrl, reqTime, pageData);
+                errorIO.writeErrorEntry(res.statusCode, urlName, fullUrl, urlId, 
+                    urlGroupId, reqTime, pageData);
             }
         });
     };
