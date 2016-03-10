@@ -17,8 +17,8 @@ var ErrorsSchema = new mongoose.Schema({
     status_code: Number,
     resource_name: String,
     resource_url: String,
-    resource_url_id: Number,
-    resource_urlgroup_id: Number,
+    resource_url_id: String,
+    resource_urlgroup_id: String,
     response: String,
     request_datetime: Date
 });
