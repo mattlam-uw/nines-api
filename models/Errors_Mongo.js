@@ -15,10 +15,10 @@ var mongoose = require('mongoose');
 var ErrorsSchema = new mongoose.Schema({
     user_id: String,
     status_code: Number,
-    resource_name: String,
-    resource_url: String,
-    resource_url_id: String,
-    resource_urlgroup_id: String,
+    url_name: String,
+    url: String,
+    url_id: String,
+    urlgroup_id: String,
     response: String,
     request_datetime: Date
 });
