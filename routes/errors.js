@@ -20,4 +20,11 @@ router.get('/', function(req, res, next) {
     });
 });
 
+router.get('/urlgroup/:id', function(req, res, next) {
+	console.log('API receiving the web call');
+	Errors.getErrorsByUrlGroup(req, function(data) {
+		res.json(data);
+	});
+});
+
 module.exports = router;
