@@ -21,10 +21,18 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/urlgroup/:id', function(req, res, next) {
-	console.log('API receiving the web call');
 	Errors.getErrorsByUrlGroup(req, function(data) {
 		res.json(data);
 	});
+});
+
+router.get('/response/:id', function(req, res, next) {
+    Errors.getErrorById(req, function(data) {
+        res.writeHeader(200, {"Content-Type": "text/html"});
+        res.write(data[0].response);
+        console.log(data[0].response);
+        res.end();
+    });
 });
 
 module.exports = router;
