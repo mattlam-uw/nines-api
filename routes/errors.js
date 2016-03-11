@@ -30,7 +30,6 @@ router.get('/response/:id', function(req, res, next) {
     Errors.getErrorById(req, function(data) {
         res.writeHeader(200, {"Content-Type": "text/html"});
         res.write(data[0].response);
-        console.log(data[0].response);
         res.end();
     });
 });
