@@ -16,7 +16,7 @@ var Errors = require('../models/Errors_Mongo');
 // Return all error documents from errors collection
 exports.getErrors = function(callback) {
     Errors.find(function(err, returnArr) {
-        if (err) return next(err);
+        if (err) console.log(err);
         callback(returnArr);
     });
 };
@@ -24,7 +24,7 @@ exports.getErrors = function(callback) {
 // Return error documents having requested urlgroup ID from errors collection
 exports.getErrorsByUrlGroup = function(req, callback) {
     Errors.find({ urlgroup_id: req.params.id }, function(err, returnArr) {
-        if (err) return next(err);
+        if (err) console.log(err);
         callback(returnArr);
     });
 };
@@ -32,7 +32,7 @@ exports.getErrorsByUrlGroup = function(req, callback) {
 // Return single error document having requested error ID
 exports.getErrorById = function(req, callback) {
     Errors.find({ _id: req.params.id }, function(err, returnVal) {
-        if (err) return next(err);
+        if (err) console.log(err);
         callback(returnVal);
     });
 };
