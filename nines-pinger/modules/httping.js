@@ -16,6 +16,7 @@ var http = require('http'); // Used to make HTTP requests
 
 // Local Module Dependencies
 var config = require('../../modules/config-convey'); // Config data from config.js
+var logger = require('../../modules/logger.js'); // Logging module
 var db = require('../../modules/database.js'); // Open and close DB connections
 var errorIO = require('../models/errors_Ping_IO_Mongo.js'); // Errors model IO ops
 var headIO = require('../models/heads_Ping_IO_Mongo.js'); // Heads model IO ops
@@ -31,7 +32,7 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
     // Check for URL data passed to function. If the array is empty, then close 
     // the database connection end return out of this function
     if (arrUrls[0] === undefined || arrPingUrlGroups[0] === undefined) {
-        console.log('Error - no URL or URL Group data provided');
+        logger.error("No URL or URL Group data found. Closing DB connection");
         db.closeConnection();
         return;
     }
@@ -63,7 +64,7 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
             // last of Ping response data has been recorded and close the DB
             // connection
             req.on('error', function(err) {
-                console.log('Likely an incorrectly formed domain', err);
+                logger.info("Likely an incorrectly formed domain:", err);
                 setTimeout(function() {
                     db.closeConnection();
                 }, config.urlGroupQueryWait);
@@ -73,7 +74,7 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
             // https capability coming in the future
         } else {
             // some protocol other than http and https was specified
-            console.log(
+            logger.info(
                 "The specified protocol for the URL " + arrUrls[i].host
                 + arrUrls[i].path + " is '" + arrUrls[i].protocol + "'"
                 + ". It should be either 'http' or 'https'."

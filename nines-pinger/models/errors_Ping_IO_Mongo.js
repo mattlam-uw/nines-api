@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 
 // Local Module Dependencies
 var Errors = require('../../models/Errors_Mongo');
+var logger = require('../../modules/logger.js'); // Logging module
 
 /**
  * Errors model IO methods
@@ -30,7 +31,8 @@ exports.writeErrorEntry = function(statusCode, urlName, url,
 
     // Save the new error log entry to MongoDB
     newErrorEntry.save(function(err) {
-        if (err) console.log(err);
-        console.log('Error Log Entry Added');
+        if (err) logger.error(err);
+        logger.info('Error response logged with status code of ' + statusCode +
+                    ' for URL Name: ' + urlName + ' URL: ' + url);
     });
 };

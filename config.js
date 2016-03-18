@@ -15,8 +15,11 @@ var config = {
     // The following assumes the path will be under the Nines API application
     // root directory (typically one directory level up from the location of
     // this file
-    "Logs_Dir_Path": "/nines-pinger/logs/",
-    "URLs_File_Path": "/nines-pinger/data/urls.json",
+    "Log_Dir_Path": "/nines-pinger/log/",
+    // Name of the info log file to be stored in the above location
+    "Info_Log_Filename": "info.log",
+    // Name of the error log file to be stored in the above location
+    "Error_Log_Filename": "error.log",
     // HTTP Status Code threshold for sending a follow-up request to get
     // full page data. In other words, if the initial HTTP request to a
     // URL returns a number equal to or greater than the number specified

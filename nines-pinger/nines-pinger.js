@@ -10,12 +10,23 @@
  *
  */
 
+// Require node libraries
+var fs = require('fs');
+
 // Require local modules for interacting with models
 var db = require('../modules/database.js');
 
 // Require local modules
 var httping = require('./modules/httping.js');
 var urlsIO = require('./models/urls_Ping_IO_Mongo.js');
+var config = require('../modules/config-convey'); // Config data from config.js
+var logger = require('../modules/logger.js');
+
+// Check for directory for log files and create if it does not exist
+if (!fs.existsSync(config.logFileDir)) {
+    fs.mkdirSync(config.logFileDir);
+    logger.info("Created directory for logs at:", config.logFileDir);
+}
 
 // Open a database connection
 db.openConnection();
@@ -28,6 +39,7 @@ db.openConnection();
  **/
 var cbGetUrlData = function(urlData, pingUrlGroups) {
     // Kick off a set of HTTP requests
+    logger.info("Beginning new set of request pings");
     httping.pingUrls(urlData, pingUrlGroups);
 };
 

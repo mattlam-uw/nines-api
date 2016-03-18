@@ -6,12 +6,8 @@
 // Dependencies:
 var mongoose = require('mongoose');
 var Heads = require('../../models/Heads_Mongo');
-var Urls = require('../../models/Urls_Mongo');
-var UrlGroups = require('../../models/UrlGroups_Mongo');
 var UrlIO = require('./urls_Ping_IO_Mongo');
-
-// Global variables that should be converted to constants set by config
-var errorThreshold = 400;
+var logger = require('../../modules/logger.js'); // Logging module
 
 /**
  * Heads model methods
@@ -32,8 +28,9 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
     // models to increment the response and error totals accordingly for this
     // URL's response
     newHeadsEntry.save(function(err, head) {
-        if (err) console.log(err);
-        console.log('HEAD request logged');
+        if (err) logger.error(err);
+        logger.info('HEAD response with status code of ' + statusCode +
+                    ' for URL ID: ' + urlID);
 
         // Update the response and error totals on Urls model doc for this URL
         UrlIO.updateUrlResponses(head.url_id, head.status_code);

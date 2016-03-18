@@ -16,6 +16,7 @@
 
 // Dependencies
 var mongoose = require('mongoose'); // Used for interaction with MongoDB-based model
+var logger = require('./logger.js'); // Logging module
 
 // Database Methods (Currently using MongoDB and Mongoose)
 
@@ -23,16 +24,16 @@ var mongoose = require('mongoose'); // Used for interaction with MongoDB-based m
 exports.openConnection = function() {
     mongoose.connect('mongodb://localhost/nines', function(err) {
         if (err) {
-    		console.log('MongoDB connection error', err);
+            logger.info('MongoDB connection error', err);
     	} else {
-    		console.log('MongoDB connection opened');
+            logger.info('MongoDB connection opened');
     	}
     })
 };
 
 // Close the database connection
 exports.closeConnection = function() {
-    console.log('MongoDB connection closed');
+    logger.info('MongoDB connection closed');
     mongoose.connection.close();
 };
 

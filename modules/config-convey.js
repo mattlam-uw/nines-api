@@ -21,10 +21,13 @@ exports.ninesWebHost = "http://" + config.Nines_Web_Host_Name + ":"
 exports.ninesApiPort = config.Nines_API_Port;
 
 // Path to /logs directory used by Nines Api
-exports.logFileDir = path.join(__dirname, '..', config.Logs_Dir_Path);
+exports.logFileDir = path.join(__dirname, '..', config.Log_Dir_Path);
 
-// Path to urls.json file containing URL data
-exports.urlsFilePath = path.join(__dirname, '..', config.URLs_File_Path);
+// File name for info log
+exports.infoLogFilename = config.Info_Log_Filename;
+
+// File name for error log
+exports.errorLogFilename = config.Error_Log_Filename;
 
 // Number of seconds to wait after last of Ping response data is recorded in DB
 exports.urlGroupQueryWait = config.URL_Group_Query_Wait * 1000;
