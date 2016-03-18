@@ -10,29 +10,6 @@
  *
  */
 
-/**
- * Test out Bunyan
- */
-var bunyan = require('bunyan');
-var log = bunyan.createLogger({
-    name: "nines-api-test",
-    streams: [
-        {
-            level: 'info',
-            path: './test-info-log.log'
-        },
-        {
-            level: 'error',
-            path: './test-error-log.log'
-        }
-    ]
-});
-
-log.info("Guten Tag Mein Log");
-
-
-// ********* END OF BUNYAN TESTING CODE
-
 // Require local modules for interacting with models
 var db = require('../modules/database.js');
 
