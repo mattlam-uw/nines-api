@@ -5,6 +5,7 @@
 // Node.js Module Dependencies
 var Urls = require('../../models/Urls_Mongo');
 var UrlGroups = require('../../models/UrlGroups_Mongo');
+var logger = require('../../modules/logger.js');
 
 
 // Retrieve all URL data from MongoDB-based Urls model
@@ -16,7 +17,7 @@ exports.getUrls = function(callback) {
     UrlGroups.find(
         { ping_frequency: { $in: pingFreqs }},
         function(err, urlGroups) {
-            if(err) console.log(err);
+            if(err) logger.error(err);
             var pingUrlGroups = [];
             var pingUrlGroupIds = [];
             for (var i = 0; i < urlGroups.length; i++) {
@@ -29,7 +30,7 @@ exports.getUrls = function(callback) {
             Urls.find(
                 { urlgroup_id: { $in: pingUrlGroupIds }},
                 function(err, pingUrls) {
-                    if (err) console.log(err);
+                    if (err) logger.error(err);
                     callback(pingUrls, pingUrlGroups);
                 }
             );
@@ -43,7 +44,7 @@ exports.updateUrlResponses = function(urlId, statusCode) {
     Urls.findOne(
         { '_id': urlId },
         function(err, url) {
-            if (err) console.log(err);
+            if (err) logger.error(err);
 
             // Create 'newResponses' object to store updated response totals.
             // If a 'responses' property (object) already exists for the url
@@ -65,7 +66,7 @@ exports.updateUrlResponses = function(urlId, statusCode) {
                 { '_id': url._id },
                 { 'responses': newResponses },
                 function(err, numAffected) {
-                    if (err) console.log(err);
+                    if (err) logger.error(err);
                 }
             );
         }
@@ -78,7 +79,7 @@ exports.getUrlResponses = function(urlGroupId, urlGroupName, callback) {
     Urls.find(
         { 'urlgroup_id': urlGroupId },
         function(err, urls) {
-            if (err) console.log(err);
+            if (err) logger.error(err);
 
             // Create a 'responses' object that will be populated with
             // status-code response totals from all URLs in the URL Group
@@ -121,13 +122,13 @@ function getValidFrequencies() {
     var min = date.getMinutes();
     var hour = date.getHours();
 
-    console.log('Current Date:', date);
-    console.log('Current Mins:', min);
-    console.log('Current Hour:', hour);
+    logger.info('Current Date:', date);
+    logger.info('Current Mins:', min);
+    logger.info('Current Hour:', hour);
 
     // The value of 5 is valid in all cases, so include in return variable
     var frequencies = [5];
-    console.log('Assigning freqs for :5, :25, :35, :55', frequencies);
+    logger.info('Assigning freqs for :5, :25, :35, :55', frequencies);
 
     /*
     For the following target minute values, check the current server time
@@ -138,44 +139,44 @@ function getValidFrequencies() {
     // :10
     if (min > 7  && min < 14) {
         frequencies.push(10);
-        console.log('Assigning freqs for :10', frequencies);
+        logger.info('Assigning freqs for :10', frequencies);
     // :15
     } else if (min > 13 && min < 18) {
         frequencies.push(15);
-        console.log('Assigning freqs for :15', frequencies);
+        logger.info('Assigning freqs for :15', frequencies);
 
     // :20
     } else if (min > 17 && min < 24) {
         frequencies.push(10);
-        console.log('Assigning freqs for :20', frequencies);
+        logger.info('Assigning freqs for :20', frequencies);
 
     // :25 -- no frequency values to add
     // :30
     } else if (min > 27 && min < 34) {
         frequencies.push.apply(frequencies, [10, 15, 30]);
-        console.log('Assigning freqs for :30', frequencies);
+        logger.info('Assigning freqs for :30', frequencies);
 
     // :35 -- no frequency values to add
     // :40
     } else if (min > 37 && min < 44) {
         frequencies.push(10);
-        console.log('Assigning freqs for :40', frequencies);
+        logger.info('Assigning freqs for :40', frequencies);
 
     // :45
     } else if (min > 43 && min < 48) {
         frequencies.push(15);
-        console.log('Assigning freqs for :45', frequencies);
+        logger.info('Assigning freqs for :45', frequencies);
 
     // :50
     } else if (min > 47 && min < 54) {
         frequencies.push(10);
-        console.log('Assigning freqs for :50', frequencies);
+        logger.info('Assigning freqs for :50', frequencies);
 
     // :55 -- no frequency values to add
     // :00 -- check additionally for hour frequencies
     } else if (min > 57 || min < 4 ) {
         frequencies.push.apply(frequencies, [10, 15, 30, 60]);
-        console.log('Assigning freqs for :00', frequencies);
+        logger.info('Assigning freqs for :00', frequencies);
 
         /*
          For the following target hour values, test the current server time to
@@ -183,19 +184,19 @@ function getValidFrequencies() {
          */
         if (hour % 2 === 0) {
             frequencies.push(120);
-            console.log('Assigning freqs for 2 hours', frequencies);
+            logger.info('Assigning freqs for 2 hours', frequencies);
         }
         if (hour % 6 === 0) {
             frequencies.push(360);
-            console.log('Assigning freqs for 6 hours', frequencies);
+            logger.info('Assigning freqs for 6 hours', frequencies);
         }
         if (hour % 12 === 0) {
             frequencies.push(720);
-            console.log('Assigning freqs for 12 hours', frequencies);
+            logger.info('Assigning freqs for 12 hours', frequencies);
         }
         if (hour === 0) {
             frequencies.push(1440);
-            console.log('Assigning freqs for 1 day', frequencies);
+            logger.info('Assigning freqs for 1 day', frequencies);
         }
     }
     return frequencies;

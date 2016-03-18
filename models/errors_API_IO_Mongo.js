@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 
 // Local Module Dependencies
 var Errors = require('../models/Errors_Mongo');
+var logger = require('../modules/logger.js');
 
 /**
  * API Methods
@@ -16,7 +17,7 @@ var Errors = require('../models/Errors_Mongo');
 // Return all error documents from errors collection
 exports.getErrors = function(callback) {
     Errors.find(function(err, returnArr) {
-        if (err) console.log(err);
+        if (err) logger.error(err);
         callback(returnArr);
     });
 };
@@ -24,7 +25,7 @@ exports.getErrors = function(callback) {
 // Return error documents having requested urlgroup ID from errors collection
 exports.getErrorsByUrlGroup = function(req, callback) {
     Errors.find({ urlgroup_id: req.params.id }, function(err, returnArr) {
-        if (err) console.log(err);
+        if (err) logger.error(err);
         callback(returnArr);
     });
 };
@@ -32,7 +33,7 @@ exports.getErrorsByUrlGroup = function(req, callback) {
 // Return single error document having requested error ID
 exports.getErrorById = function(req, callback) {
     Errors.find({ _id: req.params.id }, function(err, returnVal) {
-        if (err) console.log(err);
+        if (err) logger.error(err);
         callback(returnVal);
     });
 };

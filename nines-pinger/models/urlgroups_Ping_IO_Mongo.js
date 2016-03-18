@@ -5,6 +5,7 @@
 var UrlGroups = require('../../models/UrlGroups_Mongo');
 var UrlIO = require('./urls_Ping_IO_Mongo');
 var db = require('../../modules/database.js'); // Open and close DB connections
+var logger = require('../../modules/logger.js'); // Module for logging
 
 // Update all responses for a given URL Group
 function updateUrlGroupResponses(urlGroupId, groupCount, groupsCount,
@@ -16,7 +17,7 @@ function updateUrlGroupResponses(urlGroupId, groupCount, groupsCount,
             'last_ping': requestDateTime
         },
         function(err, numAffected) {
-            if (err) console.log(err);
+            if (err) logger.error(err);
             // Increment the counter tracking the number of URL Groups for which
             // response totals are being qaueried to see if this is the last one.
             groupCount.count += 1;
