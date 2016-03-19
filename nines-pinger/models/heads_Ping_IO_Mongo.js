@@ -16,7 +16,7 @@ var logger = require('../../modules/logger.js'); // Logging module
 // Create new MongoDB doc in Heads collection for a response to HEAD request
 // for this URL. Also update the Urls collection to appropriately increment the
 // response and error totals for this URL.
-exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
+exports.writeHeadsEntry = function(reqDateTime, urlName, fullUrl, urlID, statusCode) {
     // Create a new Heads entry from data passed to this function
     var newHeadsEntry = Heads({
         datetime: reqDateTime,
@@ -29,10 +29,10 @@ exports.writeHeadsEntry = function(reqDateTime, urlID, statusCode) {
     // URL's response
     newHeadsEntry.save(function(err, head) {
         if (err) logger.error(err);
-        logger.info('HEAD response with status code of ' + statusCode +
-                    ' for URL ID: ' + urlID);
+        logger.info('HEAD response | status code: ' + statusCode +
+            ' | URL Name: ' + urlName + ' | URL: ' + fullUrl);
 
         // Update the response and error totals on Urls model doc for this URL
-        UrlIO.updateUrlResponses(head.url_id, head.status_code);
+        // UrlIO.updateUrlResponses(head.url_id, head.status_code);
     });
 };

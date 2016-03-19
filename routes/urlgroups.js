@@ -9,7 +9,7 @@
 // Node.js Module Dependencies
 var express = require('express');
 var router = express.Router();
-var logger = require('./modules/logger.js');
+var logger = require('../modules/logger.js');
 
 // Local Module Dependencies
 var UrlGroups = require('../models/urlgroups_API_IO_Mongo.js'); // UrlGroups model IO

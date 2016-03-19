@@ -10,7 +10,22 @@ var logger = require('../../modules/logger.js');
 
 // Retrieve all URL data from MongoDB-based Urls model
 exports.getUrls = function(callback) {
+    // Retrieve the valid URL ping frequency values and log values retrieved
     var pingFreqs = getValidFrequencies();
+    var pingFreqLogStr = "";
+    for (var i = 0; i < pingFreqs.length; i++) {
+        pingFreqLogStr += ':' + pingFreqs[i];
+        if (pingFreqs.length > 1) {
+            if (i < (pingFreqs.length - 2)) {
+                pingFreqLogStr += ',';
+            } else if (i === (pingFreqs.length - 2)) {
+                pingFreqLogStr += ' and';
+            }
+        }
+        pingFreqLogStr += ' ';
+    }
+    logger.info('Pinging URLs having a ping frequency of every ' +
+                 pingFreqLogStr + ' minutes.');
 
     // Determine URL Groups to ping, and populate one array containing only
     // URL Group IDs and another array containing all URL Group objects
@@ -122,13 +137,11 @@ function getValidFrequencies() {
     var min = date.getMinutes();
     var hour = date.getHours();
 
-    logger.info('Current Date:', date);
-    logger.info('Current Mins:', min);
-    logger.info('Current Hour:', hour);
+    // logger.info('Current Date:', date);
 
     // The value of 5 is valid in all cases, so include in return variable
     var frequencies = [5];
-    logger.info('Assigning freqs for :5, :25, :35, :55', frequencies);
+    // logger.info('Assigning freqs for :5, :25, :35, :55', frequencies);
 
     /*
     For the following target minute values, check the current server time
@@ -139,44 +152,44 @@ function getValidFrequencies() {
     // :10
     if (min > 7  && min < 14) {
         frequencies.push(10);
-        logger.info('Assigning freqs for :10', frequencies);
+        // logger.info('Assigning freqs for :10', frequencies);
     // :15
     } else if (min > 13 && min < 18) {
         frequencies.push(15);
-        logger.info('Assigning freqs for :15', frequencies);
+        // logger.info('Assigning freqs for :15', frequencies);
 
     // :20
     } else if (min > 17 && min < 24) {
         frequencies.push(10);
-        logger.info('Assigning freqs for :20', frequencies);
+        // logger.info('Assigning freqs for :20', frequencies);
 
     // :25 -- no frequency values to add
     // :30
     } else if (min > 27 && min < 34) {
         frequencies.push.apply(frequencies, [10, 15, 30]);
-        logger.info('Assigning freqs for :30', frequencies);
+        // logger.info('Assigning freqs for :30', frequencies);
 
     // :35 -- no frequency values to add
     // :40
     } else if (min > 37 && min < 44) {
         frequencies.push(10);
-        logger.info('Assigning freqs for :40', frequencies);
+        // logger.info('Assigning freqs for :40', frequencies);
 
     // :45
     } else if (min > 43 && min < 48) {
         frequencies.push(15);
-        logger.info('Assigning freqs for :45', frequencies);
+        // logger.info('Assigning freqs for :45', frequencies);
 
     // :50
     } else if (min > 47 && min < 54) {
         frequencies.push(10);
-        logger.info('Assigning freqs for :50', frequencies);
+        // logger.info('Assigning freqs for :50', frequencies);
 
     // :55 -- no frequency values to add
     // :00 -- check additionally for hour frequencies
     } else if (min > 57 || min < 4 ) {
         frequencies.push.apply(frequencies, [10, 15, 30, 60]);
-        logger.info('Assigning freqs for :00', frequencies);
+        // logger.info('Assigning freqs for :00', frequencies);
 
         /*
          For the following target hour values, test the current server time to
@@ -184,19 +197,19 @@ function getValidFrequencies() {
          */
         if (hour % 2 === 0) {
             frequencies.push(120);
-            logger.info('Assigning freqs for 2 hours', frequencies);
+            // logger.info('Assigning freqs for 2 hours', frequencies);
         }
         if (hour % 6 === 0) {
             frequencies.push(360);
-            logger.info('Assigning freqs for 6 hours', frequencies);
+            // logger.info('Assigning freqs for 6 hours', frequencies);
         }
         if (hour % 12 === 0) {
             frequencies.push(720);
-            logger.info('Assigning freqs for 12 hours', frequencies);
+            // logger.info('Assigning freqs for 12 hours', frequencies);
         }
         if (hour === 0) {
             frequencies.push(1440);
-            logger.info('Assigning freqs for 1 day', frequencies);
+            // logger.info('Assigning freqs for 1 day', frequencies);
         }
     }
     return frequencies;

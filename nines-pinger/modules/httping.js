@@ -121,6 +121,9 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
         // Upon response completion, kick off a follow-up request if needed and
         // log the response info
         res.on('end', function() {
+            // Create a full URL from host and path values
+            var fullUrl = urlProtocol + "://" +  urlHost + urlPath;
+
             // If the request method is HEAD, log the output from the response.
             // If the status code was >= threshold set in config.js, then do a 
             // follow-up GET request to retrieve the full page data.
@@ -139,7 +142,7 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
 
                 // Log the ping request to the Heads model (this will also log
                 // it to the Urls model
-                headIO.writeHeadsEntry(reqDateTime, urlId, res.statusCode);
+                headIO.writeHeadsEntry(reqDateTime, urlName, fullUrl, urlId, res.statusCode);
 
                 // Increment the counter tracking number of pings that have
                 // been logged
@@ -159,8 +162,6 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
             } else if (method === 'GET') {
                 // Get the current date for logging
                 var reqTime = new Date();
-                // Combine protocol host and path into a URL for logging
-                var fullUrl = urlProtocol + "://" +  urlHost + urlPath;
 
                 // Log the error response to MongoDB
                 errorIO.writeErrorEntry(res.statusCode, urlName, fullUrl, urlId, 

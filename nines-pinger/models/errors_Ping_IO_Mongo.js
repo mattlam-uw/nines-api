@@ -32,7 +32,7 @@ exports.writeErrorEntry = function(statusCode, urlName, url,
     // Save the new error log entry to MongoDB
     newErrorEntry.save(function(err) {
         if (err) logger.error(err);
-        logger.info('Error response logged with status code of ' + statusCode +
-                    ' for URL Name: ' + urlName + ' URL: ' + url);
+        logger.info('GET response | status code: ' + statusCode +
+                    ' | URL Name: ' + urlName + ' | URL: ' + url);
     });
 };
