@@ -14,7 +14,7 @@ exports.getUrls = function(callback) {
     var pingFreqs = getValidFrequencies();
     var pingFreqLogStr = "";
     for (var i = 0; i < pingFreqs.length; i++) {
-        pingFreqLogStr += ':' + pingFreqs[i];
+        pingFreqLogStr += pingFreqs[i];
         if (pingFreqs.length > 1) {
             if (i < (pingFreqs.length - 2)) {
                 pingFreqLogStr += ',';
@@ -25,7 +25,7 @@ exports.getUrls = function(callback) {
         pingFreqLogStr += ' ';
     }
     logger.info('Pinging URLs having a ping frequency of every ' +
-                 pingFreqLogStr + ' minutes.');
+                 pingFreqLogStr + 'minutes.');
 
     // Determine URL Groups to ping, and populate one array containing only
     // URL Group IDs and another array containing all URL Group objects

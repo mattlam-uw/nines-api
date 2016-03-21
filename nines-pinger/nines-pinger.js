@@ -10,9 +10,6 @@
  *
  */
 
-// Require node libraries
-var fs = require('fs');
-
 // Require local modules for interacting with models
 var db = require('../modules/database.js');
 
@@ -20,13 +17,11 @@ var db = require('../modules/database.js');
 var httping = require('./modules/httping.js');
 var urlsIO = require('./models/urls_Ping_IO_Mongo.js');
 var config = require('../modules/config-convey'); // Config data from config.js
+var logAdmin = require('../modules/log-admin.js'); // Admin funcs for log files
 var logger = require('../modules/logger.js');
 
 // Check for directory for log files and create if it does not exist
-if (!fs.existsSync(config.logFileDir)) {
-    fs.mkdirSync(config.logFileDir);
-    logger.info("Created directory for logs at:", config.logFileDir);
-}
+logAdmin.checkLogDir();
 
 // Open a database connection
 db.openConnection();

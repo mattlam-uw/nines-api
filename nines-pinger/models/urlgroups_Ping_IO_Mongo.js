@@ -6,6 +6,7 @@ var UrlGroups = require('../../models/UrlGroups_Mongo');
 var UrlIO = require('./urls_Ping_IO_Mongo');
 var db = require('../../modules/database.js'); // Open and close DB connections
 var logger = require('../../modules/logger.js'); // Module for logging
+var logAdmin = require('../../modules/log-admin.js'); // Log file admin methods
 
 // Update all responses for a given URL Group
 function updateUrlGroupResponses(urlGroupId, groupCount, groupsCount,
@@ -22,9 +23,10 @@ function updateUrlGroupResponses(urlGroupId, groupCount, groupsCount,
             // response totals are being qaueried to see if this is the last one.
             groupCount.count += 1;
             // If this is the last URL Group, then go ahead and close the db
-            // connection
+            // connection and check on archiving log files
             if (groupCount.count === groupsCount) {
                 db.closeConnection();
+                logAdmin.archiveLogs();
             }
         }
     );
