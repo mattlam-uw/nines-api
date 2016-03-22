@@ -32,7 +32,14 @@ router.post('/', function(req, res, next) {
 router.put('/:id', function(req, res, next) {
     UrlGroups.updateUrlGroup(req, function(data) {
         res.json(data);
-    })
+    });
+});
+
+// PUT (update one) url group to reset response data
+router.put('/reset/:id', function(req, res, next) {
+    UrlGroups.resetUrlGroup(req, function(data) {
+       res.json(data); 
+    });
 });
 
 // DELETE (remove one) url group by id
