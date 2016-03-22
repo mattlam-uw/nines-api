@@ -20,12 +20,14 @@ router.get('/', function(req, res, next) {
     });
 });
 
+// GET error documents having given urlgroup_id
 router.get('/urlgroup/:id', function(req, res, next) {
 	Errors.getErrorsByUrlGroup(req, function(data) {
 		res.json(data);
 	});
 });
 
+// GET just the 'response' property of error document for given error ID
 router.get('/response/:id', function(req, res, next) {
     Errors.getErrorById(req, function(data) {
         res.writeHeader(200, {"Content-Type": "text/html"});
