@@ -13,7 +13,6 @@ var mongoose = require('mongoose');
 
 // Define Mongoose Schema
 var ErrorsSchema = new mongoose.Schema({
-    user_id: String,
     status_code: Number,
     url_name: String,
     url: String,
