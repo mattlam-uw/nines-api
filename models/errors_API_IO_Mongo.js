@@ -37,3 +37,19 @@ exports.getErrorById = function(req, callback) {
         callback(returnVal);
     });
 };
+
+// Delete all Error documents having URL Group ID provided as request parameter
+exports.deleteUrlGroupErrors = function(req, callback) {
+    Errors.find({ urlgroup_id: req.params.id }).remove( function(err, returnVal) {
+        if (err) logger.error(err);
+        callback(returnVal);
+    });
+}
+
+// Delete an existing URL Group
+exports.deleteUrlGroup = function(req, callback) {
+    UrlGroups.findByIdAndRemove(req.params.id, function(err, returnVal) {
+        if (err) return next(err);
+        callback(returnVal);
+    });
+};

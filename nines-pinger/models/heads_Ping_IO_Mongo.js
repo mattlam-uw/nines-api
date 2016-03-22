@@ -33,6 +33,6 @@ exports.writeHeadsEntry = function(reqDateTime, urlName, fullUrl, urlID, statusC
             ' | URL Name: ' + urlName + ' | URL: ' + fullUrl);
 
         // Update the response and error totals on Urls model doc for this URL
-        // UrlIO.updateUrlResponses(head.url_id, head.status_code);
+        UrlIO.updateUrlResponses(head.url_id, head.status_code);
     });
 };
