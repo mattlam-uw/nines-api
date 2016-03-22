@@ -35,13 +35,6 @@ router.put('/:id', function(req, res, next) {
     });
 });
 
-// PUT (update one) url group to reset response data
-router.put('/reset/:id', function(req, res, next) {
-    UrlGroups.resetUrlGroup(req, function(data) {
-       res.json(data); 
-    });
-});
-
 // DELETE (remove one) url group by id
 router.delete('/:id', function(req, res, next) {
     UrlGroups.deleteUrlGroup(req, function(data) {

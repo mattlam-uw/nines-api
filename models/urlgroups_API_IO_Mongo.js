@@ -37,14 +37,6 @@ exports.updateUrlGroup = function(req, callback) {
     });
 };
 
-// Put (modify) a URL Group to reset response data
-exports.resetUrlGroup = function(req, callback) {
-    UrlGroups.findByIdAndUpdate(req.params.id, req.body, function(err, returnVal) {
-       if (err) return next(err);
-       callback(returnVal); 
-    });
-}
-
 // Delete an existing URL Group
 exports.deleteUrlGroup = function(req, callback) {
     UrlGroups.findByIdAndRemove(req.params.id, function(err, returnVal) {
