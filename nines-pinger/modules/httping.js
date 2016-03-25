@@ -8,7 +8,7 @@
  * status code equal to or exceeding the threshold set in config.js, then a
  * full-page (method = 'GET') follow-up request is sent to the URL in order 
  * to get any valuable error message information that might be included in the 
- * page response.
+ * page response. This also gives us a view of what the a user would have seen.
  **/
 
 // Node.js Module Dependencies
@@ -29,7 +29,8 @@ var UrlGroupsIO = require('../models/urlgroups_Ping_IO_Mongo.js'); // URL Groups
 // Function to run through and ping all URLs to be pinged in this round (as
 // expressed in the arrays containing the URLs and related URL Group objects)
 exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
-    // Check for URL data passed to function. If the array is empty, then close 
+
+    // Verify URL data was passed to function. If the array is empty, then close
     // the database connection end return out of this function
     if (arrUrls[0] === undefined || arrPingUrlGroups[0] === undefined) {
         logger.error("No URL or URL Group data found. Closing DB connection");
@@ -37,9 +38,12 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
         return;
     }
 
-    // Counter to track logging calls for ping responses. This is used in the
-    // callback generated below in order to determine when the last ping
-    // response is being logged.
+    /* Counter to track ping responses. This is used in the callback generated
+     * below in order to determine when the last ping response has been
+     * received. Following this, a process to tally the URL response data at
+     * the URL Group level will be kicked off, and the database connection will
+     * be closed.
+     */
     var pings = { count: 0 };
 
     // URL data has been received, so iterate through the array of objects
@@ -59,10 +63,12 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
         // Send the request as http or https depending on protocol specified
         if (arrUrls[i].protocol === 'http') {
             var req = http.request(options, callback);
-            // If there is an error with the request, then (1) log the error,
-            // and (2) wait for the same period specified for waiting after the
-            // last of Ping response data has been recorded and close the DB
-            // connection
+
+            /* If there is an error with the request, then (1) log the error,
+             * and (2) wait for the same period specified for waiting after the
+             * last of Ping response data has been recorded and close the DB
+             * connection
+             */
             req.on('error', function(err) {
                 logger.info("Likely an incorrectly formed domain:", err);
                 setTimeout(function() {
@@ -118,44 +124,36 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
             pageData += data;
         });
 
-        // Upon response completion, kick off a follow-up request if needed and
-        // log the response info
+        /* Upon response completion, log the response info. If the status code
+         * of the response exceeds the 'error' threshold (defined in config)
+         * then kick off a follow-up GET request to retrieve full page data.
+         */
         res.on('end', function() {
             // Create a full URL from host and path values
             var fullUrl = urlProtocol + "://" +  urlHost + urlPath;
 
             // If the request method is HEAD, log the output from the response.
-            // If the status code was >= threshold set in config.js, then do a 
-            // follow-up GET request to retrieve the full page data.
+            // Then execute the follow-up GET request, if needed.
             if (method == 'HEAD') {
                 
-                // If status code >= threshold set in config.js, follow-up with 
-                // a GET request.
+                // Follow-up GET request if status code >= error threshold
                 if (res.statusCode >= config.statusCodeThreshold) {
-                    // Set up for the follow-up request
-                    var fullReqOptions = generateOptions(urlHost, urlPath, 'GET');
-                    var fullReqCallback = generateCallback(pingUrl, urlCount, pings,
-                        'GET', reqDateTime, pingUrlGroups);
+                    // Setup for the follow-up request
+                    var fullReqOptions = generateOptions(urlHost, urlPath,
+                        'GET');
+                    var fullReqCallback = generateCallback(pingUrl, urlCount,
+                        pings, 'GET', reqDateTime, pingUrlGroups);
                     // Execute the follow-up request
                     http.request(fullReqOptions, fullReqCallback).end();
+
+                    // decrement the response counter because an extra GET
+                    // request will be needed for this error
+                    pings.count -= 1;
                 }
 
-                // Log the ping request to the Heads model (this will also log
+                // Log the response info to the Heads model (this will also log
                 // it to the Urls model
                 headIO.writeHeadsEntry(reqDateTime, urlName, fullUrl, urlId, res.statusCode);
-
-                // Increment the counter tracking number of pings that have
-                // been logged
-                pings.count += 1;
-                // If this is the last ping to log, then kick off the URL Group
-                // response data query and update process after a timed delay.
-                // The delay is needed in order to ensure that all the async
-                // db calls from the ping response logging have completed.
-                if (pings.count === urlCount) {
-                    setTimeout(function() {
-                        UrlGroupsIO.updateAllUrlGroupResponses(pingUrlGroups, reqDateTime);
-                    }, config.urlGroupQueryWait);
-                }
 
             // If the request method is GET, this was a follow-up request for 
             // a full page. Log this in the errors log.
@@ -166,6 +164,20 @@ function generateCallback(pingUrl, urlCount, pings, method, reqDateTime,
                 // Log the error response to MongoDB
                 errorIO.writeErrorEntry(res.statusCode, urlName, fullUrl, urlId, 
                     urlGroupId, reqTime, pageData);
+            }
+
+            // Increment the response counter
+            pings.count += 1;
+
+            /* If this is the last response, then kick off the process to
+             * tally URL response data at the URL Group level. But first wait a
+             * few seconds (wait time modifyable in config) to ensure that all
+             * the async db calls from the ping response logging have completed.
+             */
+            if (pings.count === urlCount) {
+                setTimeout(function() {
+                    UrlGroupsIO.updateAllUrlGroupResponses(pingUrlGroups, reqDateTime);
+                }, config.urlGroupQueryWait);
             }
         });
     };
