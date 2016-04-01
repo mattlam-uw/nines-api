@@ -12,7 +12,8 @@
  **/
 
 // Node.js Module Dependencies
-var http = require('http'); // Used to make HTTP requests
+var http = require('http');   // Used to make HTTP requests
+var https = require('https'); // Used to make HTTPS requests
 
 // Local Module Dependencies
 var config = require('../../modules/config-convey'); // Config data from config.js
@@ -77,7 +78,15 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
             });
             req.end();
         } else if (arrUrls[i].protocol === 'https') {
-            // https capability coming in the future
+            var req = https.request(options, callback);
+            
+            req.on('error', function(err) {
+                logger.info("Likely an incorrectly formed domain:", err);
+                setTimeout(function() {
+                    db.closeConnection();
+                }, config.urlGroupQueryWait);
+            });
+            req.end();
         } else {
             // some protocol other than http and https was specified
             logger.info(
