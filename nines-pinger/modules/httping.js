@@ -60,33 +60,16 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
         // Generate request callback
         var callback = generateCallback(arrUrls[i], arrUrls.length, pings, reqMethod, reqDateTime,
                                         arrPingUrlGroups);
-
+        
+        // Variable to represent http or https request object                                
+        var req = null;
+        
         // Send the request as http or https depending on protocol specified
-        if (arrUrls[i].protocol === 'http') {
-            var req = http.request(options, callback);
-
-            /* If there is an error with the request, then (1) log the error,
-             * and (2) wait for the same period specified for waiting after the
-             * last of Ping response data has been recorded and close the DB
-             * connection
-             */
-            req.on('error', function(err) {
-                logger.info("Likely an incorrectly formed domain:", err);
-                setTimeout(function() {
-                    db.closeConnection();
-                }, config.urlGroupQueryWait);
-            });
-            req.end();
-        } else if (arrUrls[i].protocol === 'https') {
-            var req = https.request(options, callback);
-            
-            req.on('error', function(err) {
-                logger.info("Likely an incorrectly formed domain:", err);
-                setTimeout(function() {
-                    db.closeConnection();
-                }, config.urlGroupQueryWait);
-            });
-            req.end();
+        var protocol = arrUrls[i].protocol;
+        if (protocol === 'http') {
+            req = http.request(options, callback);
+        } else if (protocol === 'https') {
+            req = https.request(options, callback);
         } else {
             // some protocol other than http and https was specified
             logger.info(
@@ -94,6 +77,20 @@ exports.pingUrls = function(arrUrls, arrPingUrlGroups) {
                 + arrUrls[i].path + " is '" + arrUrls[i].protocol + "'"
                 + ". It should be either 'http' or 'https'."
             );
+        }
+
+        /* If a an http or https request was made, then if there is an error 
+         * with the request, (1) log the error, and (2) wait for a specified 
+         * period (defined in config) and close the DB connection.
+         */
+        if (req) {
+            req.on('error', function(err) {
+            logger.info("Likely an incorrectly formed domain:", err);
+            setTimeout(function() {
+                db.closeConnection();
+            }, config.urlGroupQueryWait);
+        });
+        req.end();
         }
     }
 }
