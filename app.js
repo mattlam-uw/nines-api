@@ -10,7 +10,7 @@ var errors = require('./routes/errors'); // Methods for processing calls to /err
 var heads = require('./routes/heads'); // Methods for processing calls to /heads
 var urls = require('./routes/urls'); // Methods for processing calls to /urls
 var urlgroups = require('./routes/urlgroups'); // Methods for processing calls to /urlgroups
-// var urlgroupurls = require('./routes/urlgroupurls'); // Methods for processing calls to /urlgroupurls
+var users = require('./routes/users'); // Methods for processing calls to /users
 var db = require('./modules/database'); // Provide connection to database
 
 var app = express();
@@ -25,7 +25,7 @@ app.set('view engine', 'ejs');
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -42,6 +42,7 @@ app.use('/errors', errors);
 app.use('/heads', heads);
 app.use('/urls', urls);
 app.use('/urlgroups', urlgroups);
+app.use('/users', users);
 // app.use('/urlgroupurls', urlgroupurls);
 
 /// catch 404 and forward to error handler
