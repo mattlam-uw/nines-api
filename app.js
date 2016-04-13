@@ -5,22 +5,38 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// Module for config data
 var config = require('./modules/config-convey'); // Config data
+
+// Module for database connection
+var db = require('./modules/database'); // Provide connection to database
+
+var app = express();
+
+// Configure Passport for authentication
+var passport = require('passport');
+var expressSession = require('express-session');
+app.use(expressSession({ secret: 'meineGeheimniss' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Initialize Passport
+var initPassport = require('./modules/passport/init');
+initPassport(passport);
+
+// Modules required for routes
 var errors = require('./routes/errors'); // Methods for processing calls to /errors
 var heads = require('./routes/heads'); // Methods for processing calls to /heads
 var urls = require('./routes/urls'); // Methods for processing calls to /urls
 var urlgroups = require('./routes/urlgroups'); // Methods for processing calls to /urlgroups
-var users = require('./routes/users'); // Methods for processing calls to /users
-var db = require('./modules/database'); // Provide connection to database
-
-var app = express();
+var users = require('./routes/users')(passport); // Methods for processing calls to /users
 
 // Connect to database
 db.openConnection();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
 
 app.use(favicon());
 app.use(logger('dev'));
@@ -43,7 +59,6 @@ app.use('/heads', heads);
 app.use('/urls', urls);
 app.use('/urlgroups', urlgroups);
 app.use('/users', users);
-// app.use('/urlgroupurls', urlgroupurls);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -13,7 +13,7 @@ var UsersSchema = new mongoose.Schema({
     username: String,
     usergroup_id: String,
     password: String,
-    user_added: Date
+    date_added: Date
 });
 
 // Export mongoose 'Errors' model
