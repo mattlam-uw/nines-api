@@ -44,7 +44,7 @@ exports.deleteUrlGroupErrors = function(req, callback) {
         if (err) logger.error(err);
         callback(returnVal);
     });
-}
+};
 
 // Delete an existing URL Group
 exports.deleteUrlGroup = function(req, callback) {
