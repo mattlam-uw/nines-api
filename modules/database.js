@@ -22,7 +22,7 @@ var logger = require('./logger.js'); // Logging module
 
 // Open a new database connection
 exports.openConnection = function() {
-    mongoose.connect('mongodb://localhost/nines', function(err) {
+    mongoose.connect('mongodb://localhost/nines', { useNewUrlParser: true }, function(err) {
         if (err) {
             logger.info('MongoDB connection error', err);
     	} else {
